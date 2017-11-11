@@ -16,6 +16,10 @@ int main(int argc, char** argv) {
 
 	Database & db = Database::getDatabaseInstance(data_directory, universe_file);
 	std::vector<double> price_point = db["AAPL"]["2012-10-05"];
+	std::vector<double>& apple_open_historical = db["AAPL"][TickerData::FieldID_OPEN];
+	// db["apple"][FIELD_ID][index];
+	// db["apple"][FIELD_ID][Date];
+
 	cout << "High price for Apple at 2012-10-05 was " << price_point.at(TickerData::FieldID_HIGH) << endl;
 	cout << "Low price for Apple at 2012-10-05 was " << price_point.at(TickerData::FieldID_LOW) << endl;
 

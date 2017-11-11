@@ -2,7 +2,6 @@
 #include "TickerData.h"
 
 
-
 TickerData::TickerData() {
 
 }
@@ -19,6 +18,8 @@ void TickerData::parseFile(std::string fileName) {
 	std::getline(f, columnNames);
 
 	std::string line;
+	bool first_iteration = true;
+	int index = 0;
 
 	while (!f.eof()) {
 		line.clear();
@@ -34,44 +35,43 @@ void TickerData::parseFile(std::string fileName) {
 			singleData = strtok(NULL, ",");
 		}
 
-		for (int i = 0; i < data.size(); ++i) {
-			switch(i) {
-			case 0:
-				m_date.push_back(Date(data.at(i)));
-				break;
-
-			case 1:
-				m_open.push_back(std::stod(data.at(i)));
-				break;
-
-			case 2:
-				m_high.push_back(std::stod(data.at(i)));
-				break;
-
-			case 3:
-				m_low.push_back(std::stod(data.at(i)));
-				break;
-
-			case 4:
-				m_close.push_back(std::stod(data.at(i)));
-				break;
-
-			case 5:
-				m_adj_close.push_back(std::stod(data.at(i)));
-				break;
-
-			case 6:
-				m_volume.push_back(std::stod(data.at(i)));
-				break;
-
-			case 7:
-				m_dividends.push_back(std::stod(data.at(i)));
-				break;
-
-			case 8:
-				m_splits.push_back(std::stod(data.at(i)));
+		// make sure the vector that holds prices for that date is created first
+		if (first_iteration) {
+			//Note !! This should be data.size() - 1 but since I am adding an additional field on the fly
+			//I go loop 1 more time to create another vector
+			for (int i = 0; i < data.size(); ++i) {
+				m_priceData.push_back({});
 			}
 		}
+
+		int fieldID_index = 0;
+
+		for (int i = 0; i < data.size(); ++i) {
+			if (i - 1 == DATE_DATA) {
+				m_date.push_back(Date(data.at(i)));
+				continue;
+			}
+
+			if (i == ADJ_OPEN_DATA && first_iteration) {
+				double adj_open = -999;
+				m_priceData.at(fieldID_index++).push_back(adj_open);
+				first_iteration = false;
+				m_priceData.at(fieldID_index++).push_back(std::stod(data.at(i)));
+				continue;
+			}
+
+			if (i == ADJ_OPEN_DATA) {
+				double adj_open = (m_priceData[FieldID_OPEN].at(index - 1) * m_priceData[FieldID_ADJ_CLOSE].at(index - 1)) /
+								  m_priceData[FieldID_CLOSE].at(index - 1);
+				m_priceData.at(fieldID_index++).push_back(adj_open);
+				m_priceData.at(fieldID_index++).push_back(std::stod(data.at(i)));
+				continue;
+			}
+
+			m_priceData.at(fieldID_index++).push_back(std::stod(data.at(i)));
+		}
+
+		index++;
 	}
 }
 
@@ -82,12 +82,12 @@ std::string TickerData::head() {
 
 	for (int i = 0; i < 5; ++i) {
 		out << m_date.at(i).toString() << "   ";
-		out << m_open.at(i) << "    ";
-		out << m_high.at(i) << "    ";
-		out << m_low.at(i) << "    ";
-		out << m_close.at(i) << "      ";
-		out << m_adj_close.at(i) << "          ";
-		out << m_volume.at(i);
+		out << m_priceData[FieldID_OPEN].at(i) << "    ";
+		out << m_priceData[FieldID_HIGH].at(i) << "    ";
+		out << m_priceData[FieldID_LOW].at(i) << "    ";
+		out << m_priceData[FieldID_CLOSE].at(i) << "      ";
+		out << m_priceData[FieldID_ADJ_CLOSE].at(i) << "          ";
+		out << m_priceData[FieldID_VOLUME].at(i);
 		out << std::endl;
 	}
 
@@ -113,14 +113,15 @@ std::vector<double> TickerData::operator[](Date date) {
 	}
 
 	std::vector<double> ret;
-	ret.push_back(m_open.at(index));
-	ret.push_back(m_high.at(index));
-	ret.push_back(m_low.at(index));
-	ret.push_back(m_close.at(index));
-	ret.push_back(m_adj_close.at(index));
-	ret.push_back(m_volume.at(index));
-	ret.push_back(m_dividends.at(index));
-	ret.push_back(m_splits.at(index));
+	ret.push_back(m_priceData[FieldID_OPEN].at(index));
+	ret.push_back(m_priceData[FieldID_HIGH].at(index));
+	ret.push_back(m_priceData[FieldID_LOW].at(index));
+	ret.push_back(m_priceData[FieldID_CLOSE].at(index));
+	ret.push_back(m_priceData[FieldID_ADJ_CLOSE].at(index));
+	ret.push_back(m_priceData[FieldID_ADJ_OPEN].at(index));
+	ret.push_back(m_priceData[FieldID_VOLUME].at(index));
+	ret.push_back(m_priceData[FieldID_DIVIDENDS].at(index));
+	ret.push_back(m_priceData[FieldID_SPLITS].at(index));
 
 	return ret;
 }
@@ -145,14 +146,19 @@ std::vector<double> TickerData::operator[](std::string date) {
 	}
 
 	std::vector<double> ret;
-	ret.push_back(m_open.at(index));
-	ret.push_back(m_high.at(index));
-	ret.push_back(m_low.at(index));
-	ret.push_back(m_close.at(index));
-	ret.push_back(m_adj_close.at(index));
-	ret.push_back(m_volume.at(index));
-	ret.push_back(m_dividends.at(index));
-	ret.push_back(m_splits.at(index));
+	ret.push_back(m_priceData[FieldID_OPEN].at(index));
+	ret.push_back(m_priceData[FieldID_HIGH].at(index));
+	ret.push_back(m_priceData[FieldID_LOW].at(index));
+	ret.push_back(m_priceData[FieldID_CLOSE].at(index));
+	ret.push_back(m_priceData[FieldID_ADJ_CLOSE].at(index));
+	ret.push_back(m_priceData[FieldID_ADJ_OPEN].at(index));
+	ret.push_back(m_priceData[FieldID_VOLUME].at(index));
+	ret.push_back(m_priceData[FieldID_DIVIDENDS].at(index));
+	ret.push_back(m_priceData[FieldID_SPLITS].at(index));
 
 	return ret;
+}
+
+std::vector<double>& TickerData::operator[](Field_ID id) {
+	return m_priceData[id];
 }

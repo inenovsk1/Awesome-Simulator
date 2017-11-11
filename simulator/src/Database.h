@@ -12,7 +12,7 @@ public:
 	Database operator=(Database const&) = delete;
 	~Database();
 	static Database & getDatabaseInstance(std::string directory, std::string universeFile);
-	TickerData & operator[](std::string universe);
+	TickerData & operator[](std::string ticker);
 
 private:
 	// member functions

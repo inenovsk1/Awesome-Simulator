@@ -51,6 +51,6 @@ Database & Database::getDatabaseInstance(std::string directory, std::string univ
 }
 
 
-TickerData & Database::operator[](std::string universe) {
-	return *m_db[universe];
+TickerData & Database::operator[](std::string ticker) {
+	return *m_db[ticker];
 }
