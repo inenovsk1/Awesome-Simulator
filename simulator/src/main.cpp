@@ -1,10 +1,18 @@
 #include <iostream>
+#include <regex>
 #include "TickerData.h"
 #include "Database.h"
+#include "ConfigParser.h"
 
 using namespace std;
 
 int main(int argc, char** argv) {
+
+	if (argc != 2) {
+		cout << "Usage: sim config_file.ini" << endl;
+		system("PAUSE");
+		exit(1);
+	}
 
 	//TickerData aapl;
 	//aapl.parseFile("E:\\home\\programming\\stock_data\\data\\S&P500\\AAPL.csv");
@@ -24,4 +32,5 @@ int main(int argc, char** argv) {
 	cout << "Low price for Apple at 2012-10-05 was " << price_point.at(TickerData::FieldID_LOW) << endl;
 
 	system("PAUSE");
+	return 0;
 }

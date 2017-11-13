@@ -13,12 +13,21 @@ public:
 	void parseConfigurations(std::string file);
 	std::map<std::string, std::unordered_map<std::string, std::string> > getConfigs();
 
+	enum MatchResult {
+		Header,
+		ParameterValuePair,
+		Comment
+	};
+
 private:
+	std::string file;
 	std::map<std::string, std::unordered_map<std::string, std::string> > m_configurations;
 
-	const std::string HEADER_REGEXP = "^[\w+]$";
-	const std::string PARAMETER_REGEXP = "^\w+=\w+$";
-	const std::string COMMENT_REGEXP = "^#";
+	const std::string HEADER_STR = R"(^[\w+]$)";
+	const std::string PARAMETER_STR = "^\w+=\w+$";
+	const std::string COMMENT_STR = "^#";
+
+	MatchResult identifyLine(std::string line);
 };
 
 
