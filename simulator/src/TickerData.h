@@ -46,6 +46,6 @@ use IBM as reference ticker to calculate how many dates
 
 
 /*
-given date, what index it is??
+given date, what index it is?? - still need to implement
 */
 

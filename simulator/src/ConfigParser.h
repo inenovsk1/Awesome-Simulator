@@ -14,6 +14,7 @@ public:
 	~ConfigParser();
 	void parseConfigurations();
 	std::map<std::string, std::unordered_map<std::string, std::string> > getConfigs();
+	std::map<std::string, std::unordered_map<std::string, std::string> > moveConfigs();
 
 	enum MatchResult {
 		Header,

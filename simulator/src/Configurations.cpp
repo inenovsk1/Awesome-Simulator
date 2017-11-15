@@ -7,7 +7,7 @@ Configurations::Configurations() {
 }
 
 
-Configurations::Configurations(std::map<std::string, std::unordered_map<std::string, std::string> > parsed_configs) {
+Configurations::Configurations(std::map<std::string, std::unordered_map<std::string, std::string> >&& parsed_configs) {
 	m_configs = parsed_configs;
 }
 

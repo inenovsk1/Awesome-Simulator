@@ -8,7 +8,7 @@ class Configurations {
 
 public:
 	Configurations();
-	Configurations(std::map<std::string, std::unordered_map<std::string, std::string> > parsed_configs);
+	Configurations(std::map<std::string, std::unordered_map<std::string, std::string> >&& parsed_configs);
 	~Configurations();
 	void setConfigs(std::map<std::string, std::unordered_map<std::string, std::string> > parsed_configs);
 	void modifyParam(std::string header, std::string key, std::string new_val);

@@ -86,3 +86,8 @@ ConfigParser::MatchResult ConfigParser::identifyLine(std::string line) {
 std::map<std::string, std::unordered_map<std::string, std::string> > ConfigParser::getConfigs() {
 	return m_configurations;
 }
+
+
+std::map<std::string, std::unordered_map<std::string, std::string> > ConfigParser::moveConfigs() {
+	return std::move(m_configurations);
+}

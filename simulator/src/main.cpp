@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
 	ConfigParser parser(argv[1]);
 	parser.parseConfigurations();
-	Configurations configs(parser.getConfigs());
+	Configurations configs(parser.moveConfigs());
 
 	Database & db = Database::getDatabaseInstance(configs.param("Universe", "data_directory"), configs.param("Universe", "universe_file"));
 	cout << "Done loading DB!" << endl;
