@@ -1,16 +1,18 @@
 #pragma once
 
+#include <iostream>
 #include <regex>
 #include <string>
 #include <map>
 #include <unordered_map>
+#include <fstream>
 
 class ConfigParser {
 
 public:
-	ConfigParser();
+	ConfigParser(std::string file_name);
 	~ConfigParser();
-	void parseConfigurations(std::string file);
+	void parseConfigurations();
 	std::map<std::string, std::unordered_map<std::string, std::string> > getConfigs();
 
 	enum MatchResult {
@@ -20,27 +22,31 @@ public:
 	};
 
 private:
-	std::string file;
+	std::string m_file;
+	std::string m_currentHeader;
 	std::map<std::string, std::unordered_map<std::string, std::string> > m_configurations;
 
-	const std::string HEADER_STR = R"(^[\w+]$)";
-	const std::string PARAMETER_STR = "^\w+=\w+$";
-	const std::string COMMENT_STR = "^#";
+	const std::string HEADER_STR = R"(^\[\w+\]$)";
+	const std::string PARAMETER_STR = R"(^.+=.+$)";
+	const std::string COMMENT_STR = R"(^#.*$)";
+
+	std::regex HEADER_REGEX;
+	std::regex PARAMETER_REGEX;
+	std::regex COMMENT_REGEX;
 
 	MatchResult identifyLine(std::string line);
+	void storeValueInTable(std::string line);
+	void extractHeader(std::string line);
 };
 
 
-/*config file class to read from config file and record in a hash table
-keyd on param name and have param values
-//how many times has the param been access / misaccessed
+/*
+how many times has the param been access / misaccessed - not done
 
-config file values class to hold the values
+config file values class to hold the values - done
 
-??? multiple threads static config file
+programatically change the parameters so don't read the config file again - done
 
-programatically change the parameters so don't read the config file again
-
-replace parameters used more than once to be used only the last value
+replace parameters used more than once to be used only the last value - done
 
 myybe add options to config file to only load some field IDS, not all of them*/
