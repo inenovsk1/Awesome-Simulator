@@ -1,4 +1,4 @@
-#pragma warning(disable : 4996)
+#include <cstring>
 #include "TickerData.h"
 
 
@@ -19,7 +19,7 @@ void TickerData::parseFile(std::string fileName) {
 
 	std::string line;
 	bool first_iteration = true;
-	int index = 0;
+	unsigned long index = 0;
 
 	while (!f.eof()) {
 		line.clear();
@@ -44,9 +44,9 @@ void TickerData::parseFile(std::string fileName) {
 			}
 		}
 
-		int fieldID_index = 0;
+		unsigned long fieldID_index = 0;
 
-		for (int i = 0; i < data.size(); ++i) {
+		for (unsigned long i = 0; i < data.size(); ++i) {
 			if (i - 1 == DATE_DATA) {
 				m_date.push_back(Date(data.at(i)));
 				continue;

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/simulator.dir/src/ConfigParser.cpp.o CMakeFiles/simulator.dir/src/Configurations.cpp.o CMakeFiles/simulator.dir/src/Database.cpp.o CMakeFiles/simulator.dir/src/Date.cpp.o CMakeFiles/simulator.dir/src/main.cpp.o CMakeFiles/simulator.dir/src/TickerData.cpp.o  -o simulator 

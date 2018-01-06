@@ -1,4 +1,4 @@
-#pragma warning(disable : 4996)
+#include <cstring>
 #include "Date.h"
 
 
@@ -34,9 +34,7 @@ Date::Date(std::string str_date) {
 }
 
 
-Date::~Date() {
-
-}
+Date::~Date()=default;
 
 
 std::string Date::toString() {

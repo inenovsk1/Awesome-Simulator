@@ -5,7 +5,7 @@ std::map<std::string, TickerData*> Database::m_db;
 Database* Database::db = nullptr;
 
 
-Database::Database(std::string directory, std::string universeFile) {
+Database::Database(std::string & directory, std::string & universeFile) {
 	getTickersFromUniverse(universeFile);
 	loadData(directory);
 }

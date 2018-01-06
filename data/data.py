@@ -27,11 +27,13 @@ def initiate_folder(folder):
         os.mkdir(folder)
 
 
-def generate_tickers_from_universe(source, universe):
+def generate_tickers_from_universe(source, universe, directory):
     page = urllib.request.urlopen(source).read()
     soup = BeautifulSoup(page, 'lxml')
 
-    with open(universe, 'w') as f:
+    os.chdir(directory)
+
+    with open(universe + '-tickers', 'w') as f:
         anchor_list = soup.find_all('a', class_='external text')
 
         for link in anchor_list:
@@ -47,20 +49,19 @@ def main():
 
     data_sources = ['yahoo', 'yahoo-dividends', 'yahoo-actions']
 
-    for source, universe in sources_universes.items():
-        generate_tickers_from_universe(source, universe)
+    working_directory = '../stock-data'
 
-    initiate_folder('./data')
+    initiate_folder(working_directory)
+
+    for source, universe in sources_universes.items():
+        generate_tickers_from_universe(source, universe, working_directory)
 
     # read tickers from each universe file
     for index, universe in enumerate(sources_universes.values()):
-        if index != 0:
-            os.chdir('./../..')
+        os.chdir(working_directory)
 
-        with open(universe, 'r') as f:
+        with open(universe + '-tickers', 'r') as f:
             tickers = f.read()
-
-        os.chdir('./data')
 
         # use this as a log file. Report if a piece of data could not be read
         log = open(universe + '_log.txt', 'w')
@@ -82,7 +83,7 @@ def main():
         # Iterate over each ticker, and pull historical data for it from yahoo
         # Also, save the pulled data in a csv file in the 'data' folder
         for ticker in tickers:
-            print('Iteration #: {0}. Ticker: {1}'.format(iteration, ticker))
+            print('Ticker #: {0}. Ticker: {1}'.format(iteration, ticker))
             iteration += 1
 
             data = list()  # store the dataframes here

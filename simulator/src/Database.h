@@ -16,7 +16,7 @@ public:
 
 private:
 	// member functions
-	Database(std::string directory, std::string universeFile);
+	Database(std::string & directory, std::string & universeFile);
 	void loadData(std::string directory);
 	void getTickersFromUniverse(std::string universeFile);
 	
