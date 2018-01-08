@@ -31,9 +31,9 @@ void Database::getTickersFromUniverse(std::string universeFile) {
 
 
 void Database::loadData(std::string directory) {
-	for (std::string ticker: m_universe) {
+	for (std::string ticker : m_universe) {
 		TickerData* data = new TickerData();
-		std::string path = directory + "\\" + ticker + ".csv";
+		std::string path = directory + "/" + ticker + ".csv";
 		data->parseFile(path);
 		m_db[ticker] = data;
 		std::cout << "Load data for ticker " << ticker << std::endl;

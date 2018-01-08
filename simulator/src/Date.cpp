@@ -1,11 +1,4 @@
-#include <cstring>
 #include "Date.h"
-
-
-
-Date::Date() {
-
-}
 
 
 Date::Date(int a_year, int a_month, int a_day) {
@@ -16,16 +9,16 @@ Date::Date(int a_year, int a_month, int a_day) {
 
 
 Date::Date(std::string str_date) {
-	char* date = (char*)str_date.c_str();
+	auto date = (char*)str_date.c_str();
 	char* num;
 	num = strtok(date, "-");
 
 	int dates[3];
 	int i = 0;
 
-	while (num != NULL) {
+	while (num != nullptr) {
 		dates[i++] = std::stoi(std::string(num));
-		num = strtok(NULL, "-");
+		num = strtok(nullptr, "-");
 	}
 
 	m_year = dates[0];
@@ -34,10 +27,7 @@ Date::Date(std::string str_date) {
 }
 
 
-Date::~Date()=default;
-
-
-std::string Date::toString() {
+std::string Date::toString() const {
 	std::ostringstream str_date;
 	str_date << m_year << "-" << m_month << "-" << m_day;
 	return str_date.str();
@@ -69,4 +59,9 @@ bool operator==(const Date& lhs, const Date& rhs) {
 	}
 
 	return false;
+}
+
+std::ostream & operator<<(std::ostream & out, const Date & date) {
+	out << date.toString();
+	return out;
 }

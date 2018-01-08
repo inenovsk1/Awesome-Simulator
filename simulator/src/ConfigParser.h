@@ -10,11 +10,11 @@
 class ConfigParser {
 
 public:
-	ConfigParser(std::string file_name);
-	~ConfigParser();
+	explicit ConfigParser(std::string file_name);
+	~ConfigParser() = default;
 	void parseConfigurations();
-	std::map<std::string, std::unordered_map<std::string, std::string> > getConfigs();
-	std::map<std::string, std::unordered_map<std::string, std::string> > moveConfigs();
+	std::map<std::string, std::unordered_map<std::string, std::string>> getConfigs();
+	std::map<std::string, std::unordered_map<std::string, std::string>> moveConfigs();
 
 	enum MatchResult {
 		Header,
@@ -25,7 +25,7 @@ public:
 private:
 	std::string m_file;
 	std::string m_currentHeader;
-	std::map<std::string, std::unordered_map<std::string, std::string> > m_configurations;
+	std::map<std::string, std::unordered_map<std::string, std::string>> m_configurations;
 
 	const std::string HEADER_STR = R"(^\[\w+\]$)";
 	const std::string PARAMETER_STR = R"(^.+=.+$)";
@@ -42,7 +42,7 @@ private:
 
 
 /*
-how many times has the param been access / misaccessed - not done
+how many times has the accessParameter been accessed / misaccessed - not done
 
 config file values class to hold the values - done
 

@@ -2,24 +2,17 @@
 
 
 ConfigParser::ConfigParser(std::string file_name) {
-	m_file = file_name;
-
+	m_file = std::move(file_name);
 	HEADER_REGEX.assign(HEADER_STR);
 	PARAMETER_REGEX.assign(PARAMETER_STR);
 	COMMENT_REGEX.assign(COMMENT_STR);
 }
 
-
-ConfigParser::~ConfigParser() {
-
-}
-
 void ConfigParser::parseConfigurations() {
-	// use std::regex_match for this function
-
 	std::ifstream in(m_file);
+
 	if (!in) {
-		std::cerr << "Failed to open file/file does not exist!" << std::endl;
+		std::cerr << "Failed to open file/file does not exist! (ConfigParser)" << std::endl;
 		exit(1);
 	}
 
@@ -62,7 +55,7 @@ void ConfigParser::extractHeader(std::string line) {
 }
 
 void ConfigParser::storeValueInTable(std::string line) {
-	int pos = line.find('=');
+	auto pos = line.find('=');
 	std::string key = line.substr(0, pos);
 	std::string val = line.substr(pos + 1);
 	m_configurations[m_currentHeader][key] = val;
@@ -83,11 +76,11 @@ ConfigParser::MatchResult ConfigParser::identifyLine(std::string line) {
 	}
 }
 
-std::map<std::string, std::unordered_map<std::string, std::string> > ConfigParser::getConfigs() {
+std::map<std::string, std::unordered_map<std::string, std::string>> ConfigParser::getConfigs() {
 	return m_configurations;
 }
 
 
-std::map<std::string, std::unordered_map<std::string, std::string> > ConfigParser::moveConfigs() {
+std::map<std::string, std::unordered_map<std::string, std::string>> ConfigParser::moveConfigs() {
 	return std::move(m_configurations);
 }

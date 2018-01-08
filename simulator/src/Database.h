@@ -24,5 +24,6 @@ private:
 	static std::vector<std::string> m_universe;
 	static std::map<std::string, TickerData*> m_db;
 	static Database* db;
+	//static std::shared_ptr<Database> db; ?
 };
 

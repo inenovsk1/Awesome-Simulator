@@ -4,17 +4,20 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <cstring>
 #include "Date.h"
 
 class TickerData {
 
 public:
-	TickerData();
-	~TickerData();
+	TickerData() = default;
+	~TickerData() = default;
 	void parseFile(std::string fileName);
 	std::string head();
 
-	enum Field_ID {
+	// this is a global enum! Might be better to use enum struct instead!
+	enum Field_ID : uint16_t {
 		FieldID_OPEN,
 		FieldID_HIGH,
 		FieldID_LOW,
@@ -28,11 +31,11 @@ public:
 
 	std::vector<double> operator[](Date date);
 	std::vector<double> operator[](std::string date);
-	std::vector<double>& operator[](Field_ID id);
+	std::vector<double> & operator[](Field_ID id);
 
 private:
 	std::vector<Date> m_date;
-	std::vector<std::vector<double> > m_priceData;
+	std::vector<std::vector<double>> m_priceData;
 
 	static const int DATE_DATA = -1;
 	static const int ADJ_OPEN_DATA = 6;

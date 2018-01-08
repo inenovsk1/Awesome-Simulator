@@ -3,6 +3,9 @@ project(simulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
+#set(CMAKE_BUILD_TYPE Release)  # RELEASE BUILD
+set(CMAKE_BUILD_TYPE Debug)    # DEBUG BUILD
+
 add_executable(simulator
         src/ConfigParser.cpp
         src/ConfigParser.h

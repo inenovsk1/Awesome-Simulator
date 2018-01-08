@@ -1,19 +1,22 @@
 #pragma once
 
+#include <cstring>
 #include <sstream>
 #include <string>
 
 class Date {
 
 public:
-	Date();
+	Date() = default;
 	Date(int a_year, int a_month, int a_day);
 	Date(std::string str_date);
-	~Date();
-	std::string toString();
-	friend bool operator<(const Date& lhs, const Date& rhs);
-	friend bool operator>(const Date& lhs, const Date& rhs);
-	friend bool operator==(const Date& lhs, const Date& rhs);
+	~Date() = default;
+	std::string toString() const;
+
+    friend bool operator<(const Date& lhs, const Date& rhs);
+    friend bool operator>(const Date& lhs, const Date& rhs);
+    friend bool operator==(const Date& lhs, const Date& rhs);
+    friend std::ostream & operator<<(std::ostream & out, const Date & date);
 
 private:
 	int m_year;
