@@ -1,14 +1,14 @@
-#include "Date.h"
+#include "DateTime.h"
 
 
-Date::Date(int a_year, int a_month, int a_day) {
+DateTime::DateTime(int a_year, int a_month, int a_day) {
 	m_year = a_year;
 	m_month = a_month;
 	m_day = a_day;
 }
 
 
-Date::Date(std::string str_date) {
+DateTime::DateTime(std::string str_date) {
 	auto date = (char*)str_date.c_str();
 	char* num;
 	num = strtok(date, "-");
@@ -27,13 +27,13 @@ Date::Date(std::string str_date) {
 }
 
 
-std::string Date::toString() const {
+std::string DateTime::toString() const {
 	std::ostringstream str_date;
 	str_date << m_year << "-" << m_month << "-" << m_day;
 	return str_date.str();
 }
 
-bool operator<(const Date& lhs, const Date& rhs) {
+bool operator<(const DateTime& lhs, const DateTime& rhs) {
 	if (lhs.m_year < rhs.m_year) {
 		return true;
 	}
@@ -48,12 +48,12 @@ bool operator<(const Date& lhs, const Date& rhs) {
 }
 
 
-bool operator>(const Date& lhs, const Date& rhs) {
+bool operator>(const DateTime& lhs, const DateTime& rhs) {
 	return rhs < lhs;
 }
 
 
-bool operator==(const Date& lhs, const Date& rhs) {
+bool operator==(const DateTime& lhs, const DateTime& rhs) {
 	if (lhs.m_year == rhs.m_year && lhs.m_month == rhs.m_month && lhs.m_day == rhs.m_day) {
 		return true;
 	}
@@ -61,7 +61,7 @@ bool operator==(const Date& lhs, const Date& rhs) {
 	return false;
 }
 
-std::ostream & operator<<(std::ostream & out, const Date & date) {
+std::ostream & operator<<(std::ostream & out, const DateTime & date) {
 	out << date.toString();
 	return out;
 }

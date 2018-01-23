@@ -35,7 +35,7 @@ void TickerData::parseFile(std::string fileName) {
 
 		for (unsigned long i = 0; i < data.size(); ++i) {
 			if (i - 1 == DATE_DATA) {
-				m_date.emplace_back(Date(data.at(i)));
+				m_date.emplace_back(DateTime(data.at(i)));
 				continue;
 			}
 
@@ -64,7 +64,7 @@ void TickerData::parseFile(std::string fileName) {
 
 std::string TickerData::head() {
 	std::ostringstream out;
-	out << "Date       Open        High        Low       Close      Adj. Close        Volume" << std::endl;
+	out << "DateTime       Open        High        Low       Close      Adj. Close        Volume" << std::endl;
 
 	for (unsigned long i = 0; i < 5; ++i) {
 		out << m_date.at(i).toString() << "   ";
@@ -81,9 +81,9 @@ std::string TickerData::head() {
 }
 
 
-std::vector<double> TickerData::operator[](Date date) {
-	Date earliest = m_date.at(0);
-	Date latest = m_date.back();
+std::vector<double> TickerData::operator[](DateTime date) {
+	DateTime earliest = m_date.at(0);
+	DateTime latest = m_date.back();
 
 	if (date < earliest || date > latest) {
 		return {};
@@ -114,9 +114,9 @@ std::vector<double> TickerData::operator[](Date date) {
 
 
 std::vector<double> TickerData::operator[](std::string date) {
-	Date current(date);
-	Date earliest = m_date.at(0);
-	Date latest = m_date.back();
+	DateTime current(date);
+	DateTime earliest = m_date.at(0);
+	DateTime latest = m_date.back();
 
 	if (current < earliest || current > latest) {
 		return {};

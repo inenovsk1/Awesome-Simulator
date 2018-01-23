@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <cstring>
-#include "Date.h"
+#include "DateTime.h"
 
 class TickerData {
 
@@ -29,12 +29,12 @@ public:
 		FieldID_SPLITS
 	};
 
-	std::vector<double> operator[](Date date);
+	std::vector<double> operator[](DateTime date);
 	std::vector<double> operator[](std::string date);
 	std::vector<double> & operator[](Field_ID id);
 
 private:
-	std::vector<Date> m_date;
+	std::vector<DateTime> m_date;
 	std::vector<std::vector<double>> m_priceData;
 
 	static const int DATE_DATA = -1;
