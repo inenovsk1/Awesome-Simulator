@@ -1,0 +1,8 @@
+2/8/2018
+Started documenting the exisitng code base.
+
+2/11/2018
+Changed parsing of csv files to use strtok_r instead of strtok.
+strtok_r is thread safe and therefore better than strtok!
+
+Finished documenting the existing code base.

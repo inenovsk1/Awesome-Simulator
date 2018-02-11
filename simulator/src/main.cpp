@@ -1,25 +1,22 @@
 #include <iostream>
-#include <fstream>
 #include "TickerData.h"
 #include "Database.h"
 #include "ConfigParser.h"
 #include "Configurations.h"
+#include "Utilities.h"
 
 using namespace std;
 
 int main(int argc, char** argv) {
 
-	if (argc != 2) {
-		cerr << "Usage: sim Configurations.ini" << endl;
-		exit(1);
-	}
+	Utils::determineCommandLineOptions(argc, argv);
 
 	ConfigParser parser(argv[1]);
 	parser.parseConfigurations();
 	Configurations configs(parser.moveConfigs());
 
-	Database & db = Database::getDatabaseInstance(configs.accessParameter("universe", "data_directory"),
-                                                  configs.accessParameter("universe", "universe_file"));
+	Database & db = Database::getDatabaseInstance(configs.accessParameter("universe", "Data_Directory"),
+                                                  configs.accessParameter("universe", "Universe_File"));
 	cout << "Done loading DB!" << endl;
 
 	std::vector<double> price_point = db["AAPL"]["2012-10-05"];

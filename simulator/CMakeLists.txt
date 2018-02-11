@@ -17,4 +17,6 @@ add_executable(simulator
         src/DateTime.h
         src/main.cpp
         src/TickerData.cpp
-        src/TickerData.h src/Utilities.h src/Utilities.cpp)
+        src/TickerData.h
+        src/Utilities.h
+        src/Utilities.cpp)

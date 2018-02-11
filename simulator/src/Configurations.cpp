@@ -1,26 +1,25 @@
 #include "Configurations.h"
 
 
+// Move constructor
 Configurations::Configurations(std::map<std::string, std::unordered_map<std::string, std::string>>&& parsed_configs) {
 	m_configs = parsed_configs;
 }
 
 
-void Configurations::setConfigs(std::map<std::string, std::unordered_map<std::string, std::string>> parsed_configs) {
-	m_configs = std::move(parsed_configs);
-}
-
-
+// Changes the parameter at [header][key] with new_val
 void Configurations::modifyParam(std::string header, std::string key, std::string new_val) {
 	m_configs[header][key] = new_val;
 }
 
 
+// Returns a copy of the configurations
 std::map<std::string, std::unordered_map<std::string, std::string>> Configurations::getConfigurations() const {
     return m_configs;
 }
 
 
+// Returns the specified parameter by header and key
 std::string Configurations::accessParameter(std::string header, std::string key) {
 	return m_configs[header][key];
 }
@@ -54,9 +53,8 @@ std::ostream& operator<< (std::ostream& a_out, const Configurations& a_configs) 
 	for (auto headerSection : a_configs.getConfigurations()) {
         a_out << "SECTION " << headerSection.first << ": " << std::endl;
 
-        //for (auto parameterPair : headerSection.second.begin()) {
-        for (auto parameterPair = headerSection.second.begin(); parameterPair != headerSection.second.end(); ++ parameterPair) {
-			a_out << parameterPair->first << " = " << parameterPair->second << std::endl;
+        for (auto parameterPair : headerSection.second) {
+			a_out << parameterPair.first << " = " << parameterPair.second << std::endl;
 		}
 
         a_out << std::endl;

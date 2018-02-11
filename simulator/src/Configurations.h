@@ -2,7 +2,7 @@
  * ~~~~~~~~~~~~~~~~~~~~ Configurations class ~~~~~~~~~~~~~~~~~~~~
  *
  * This class holds the parameters specified in the Configurations.ini file and allows
- * for the parameters to be programatically changed and runtime.
+ * for the parameters to be programmatically changed at runtime.
  * */
 
 #pragma once
@@ -18,7 +18,6 @@ public:
 	Configurations() = default;
 	explicit Configurations(std::map<std::string, std::unordered_map<std::string, std::string>>&& parsed_configs);
 	~Configurations() = default;
-	void setConfigs(std::map<std::string, std::unordered_map<std::string, std::string>> parsed_configs);
 	void modifyParam(std::string header, std::string key, std::string new_val);
     std::map<std::string, std::unordered_map<std::string, std::string>> getConfigurations() const;
 	std::string accessParameter(std::string header, std::string key);

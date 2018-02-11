@@ -1,3 +1,11 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~ Database class ~~~~~~~~~~~~~~~~~~~~
+ *
+ * This class will hold all the available historical data inside of an in-memory database.
+ * This class will use the singleton pattern, so that no copies or multiple instances
+ * can be created.
+ * */
+
 #pragma once
 
 #include <map>

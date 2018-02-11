@@ -1,3 +1,11 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~ DateTime class ~~~~~~~~~~~~~~~~~~~~
+ *
+ * This class will be responsible for operations with dates, such as
+ * comparing dates, parsing dates from strings, subtracting dates,
+ * adding dates, etc..
+ * */
+
 #pragma once
 
 #include <cstring>
@@ -13,9 +21,9 @@ public:
 	~DateTime() = default;
 	std::string toString() const;
 
-    friend bool operator<(const DateTime& lhs, const DateTime& rhs);
-    friend bool operator>(const DateTime& lhs, const DateTime& rhs);
-    friend bool operator==(const DateTime& lhs, const DateTime& rhs);
+    friend bool operator<(const DateTime & lhs, const DateTime & rhs);
+    friend bool operator>(const DateTime & lhs, const DateTime & rhs);
+    friend bool operator==(const DateTime & lhs, const DateTime & rhs);
     friend std::ostream & operator<<(std::ostream & out, const DateTime & date);
 
 private:

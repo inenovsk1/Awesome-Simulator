@@ -1,6 +1,7 @@
 #include "DateTime.h"
 
 
+// constructor using 3 integers for year, month, day
 DateTime::DateTime(int a_year, int a_month, int a_day) {
 	m_year = a_year;
 	m_month = a_month;
@@ -8,6 +9,7 @@ DateTime::DateTime(int a_year, int a_month, int a_day) {
 }
 
 
+// constructing a DateTime object using a string
 DateTime::DateTime(std::string str_date) {
 	auto date = (char*)str_date.c_str();
 	char* num;
