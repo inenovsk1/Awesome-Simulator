@@ -67,3 +67,9 @@ std::ostream & operator<<(std::ostream & out, const DateTime & date) {
 	out << date.toString();
 	return out;
 }
+
+DateTime DateTime::operator++(int dummyParameter) {
+    DateTime newTime(*this);
+
+    // implement this later
+}

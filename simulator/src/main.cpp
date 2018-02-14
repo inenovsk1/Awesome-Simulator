@@ -26,6 +26,18 @@ int main(int argc, char** argv) {
 	cout << "High price for Apple at 2012-10-05 was " << price_point.at(TickerData::FieldID_HIGH) << endl;
 	cout << "Low price for Apple at 2012-10-05 was " << price_point.at(TickerData::FieldID_LOW) << endl;
 
+    // test the Database::head function
+    cout << db["AAPL"].head();
+
+    // test code for data that doesn't exist
+    std::vector<double> aalPrice = db["AAL"]["2001-04-24"];
+
+    for (int i = 0; i < aalPrice.size(); ++i) {
+        cout << "AAL price at index " << i  << " is: " << aalPrice.at(i) << endl;
+    }
+
+    cout << "Earliest simulation date is " << db.getEarliestDate() << endl;
+
 	cout << "\nConfigurations used:" << endl;
     cout << configs << endl;
 

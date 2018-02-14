@@ -4,12 +4,13 @@
 std::vector<std::string> Database::m_universe;
 std::map<std::string, TickerData*> Database::m_db;
 Database* Database::db = nullptr;
+DateTime Database::m_earliestDate;
 
 
 // Constructor
-Database::Database(std::string & directory, std::string & universeFile) {
+Database::Database(std::string & directory, std::string & universeFile, DateTime earliestDate) {
 	getTickersFromUniverse(universeFile);
-	loadData(directory);
+	loadData(directory, earliestDate);
 }
 
 
@@ -80,11 +81,12 @@ AUTHOR
 DATE
     November 20, 2017
 */
-void Database::loadData(std::string directory) {
+void Database::loadData(std::string directory, DateTime earliestUniverseDate) {
 	for (std::string ticker : m_universe) {
-		TickerData* data = new TickerData();
-		std::string path = directory + "/" + ticker + ".csv";
-		data->parseFile(path);
+		TickerData *data = new TickerData(ticker);
+		std::string pathToTicker = directory + "/" + ticker + ".csv";
+        std::string pathToUniverseReference = directory + "/IBM.csv";
+		data->parseFile(pathToTicker, pathToUniverseReference, earliestUniverseDate);
 		m_db[ticker] = data;
 		std::cout << "Load data for ticker " << ticker << std::endl;
 	}
@@ -117,9 +119,10 @@ AUTHOR
 DATE
     November 20, 2017
 */
-Database & Database::getDatabaseInstance(std::string directory, std::string universeFile) {
+Database & Database::getDatabaseInstance(std::string dataDirectory, std::string universeFile) {
 	if (db == nullptr) {
-		db = new Database(directory, universeFile);
+        m_earliestDate = calculateEarliestUniverseDate(dataDirectory);
+		db = new Database(dataDirectory, universeFile, m_earliestDate);
 		return *db;
 	}
 
@@ -132,4 +135,53 @@ Database & Database::getDatabaseInstance(std::string directory, std::string univ
 // database.
 TickerData & Database::operator[](std::string ticker) {
 	return *m_db[ticker];
+}
+
+
+/*
+NAME
+    Database::calculateEarliestUniverseDate
+
+SYNOPSIS
+    DateTime Database::calculateEarliestUniverseDate(std::string dataDirectory);
+
+    dataDirectory    -> Path to the directory that contains all data for the universe.
+
+DESCRIPTION
+    Use the IBM ticker as a reference to get the earliest date in existence on our
+    data set. Using IBM, just because it has been around forever so it is guaranteed
+    that historically it will go way back.
+
+RETURNS
+    A DateTime object containing the earliest date for which we have historical data.
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 13, 2018
+*/
+DateTime Database::calculateEarliestUniverseDate(std::string dataDirectory) {
+    std::string IBM = dataDirectory + "/IBM.csv";
+    std::string line;
+    std::ifstream in(IBM);
+
+    // exhaust first line that contains field names
+    std::getline(in, line);
+
+    //extract earliest date
+    line.clear();
+    std::getline(in, line);
+    auto firstCommaPosition = line.find(',');
+    std::string date = line.substr(0, firstCommaPosition);
+
+    in.close();
+
+    // construct and return an anonymous DateTime object from the string
+    return DateTime(date);
+}
+
+
+DateTime Database::getEarliestDate() {
+    return m_earliestDate;
 }

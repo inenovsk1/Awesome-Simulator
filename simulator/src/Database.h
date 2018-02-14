@@ -19,19 +19,20 @@ public:
 	Database(Database const&) = delete;
 	Database operator=(Database const&) = delete;
 	~Database();
-	static Database & getDatabaseInstance(std::string directory, std::string universeFile);
+	static Database & getDatabaseInstance(std::string dataDirectory, std::string universeFile);
 	TickerData & operator[](std::string ticker);
+    DateTime getEarliestDate();
 
 private:
 	// member functions
-	Database(std::string & directory, std::string & universeFile);
-	void loadData(std::string directory);
+	Database(std::string & directory, std::string & universeFile, DateTime earliestDate);
+	void loadData(std::string directory, DateTime earliestUniverseDate);
 	void getTickersFromUniverse(std::string universeFile);
+    static DateTime calculateEarliestUniverseDate(std::string dataDirectory);
 	
 	// member variables
 	static std::vector<std::string> m_universe;
 	static std::map<std::string, TickerData*> m_db;
 	static Database* db;
-	//static std::shared_ptr<Database> db; ?
+    static DateTime m_earliestDate;
 };
-

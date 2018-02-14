@@ -33,9 +33,23 @@ class TickerData {
 
 public:
 	TickerData() = default;
+    TickerData(std::string ticker);
 	~TickerData() = default;
-	void parseFile(std::string fileName);
 	std::string head();
+    DateTime getFirstDate(std::string pathToFile);
+    bool insufficientData(std::string pathToFile, DateTime earliestUniverseDate);
+
+    void parseFile(std::string pathToCurrentTickerFile,
+                   std::string pathToUniverseReferenceFile,
+                   DateTime earliestUniverseDate);
+
+    std::vector<DateTime> findMissingDates(DateTime earliestUniverseDate,
+                                           DateTime earliestCurrentDate,
+                                           std::string pathToUniverseReference);
+
+    void handleEmptyData(std::string pathToCurrentTickerFile,
+                         std::string pathToUniverseReference,
+                         DateTime earliestUniverseDate);
 
 	// this is a global enum! Might be better to use enum struct instead!
 	enum Field_ID : uint16_t {
@@ -47,7 +61,8 @@ public:
 		FieldID_ADJ_OPEN,
 		FieldID_VOLUME,
 		FieldID_DIVIDENDS,
-		FieldID_SPLITS
+		FieldID_SPLITS,
+        IDS_MAX = FieldID_SPLITS
 	};
 
 	std::vector<double> operator[](DateTime date);
@@ -55,19 +70,14 @@ public:
 	std::vector<double> & operator[](Field_ID id);
 
 private:
-	std::vector<DateTime> m_date;
+	std::vector<DateTime> m_tickerDates;
 	std::vector<std::vector<double>> m_priceData;
+    std::string m_tickerName;
 
-	static const int DATE_DATA = -1;
-	static const int ADJ_OPEN_DATA = 6;
-	/* Order in which the field ids are set in the m_priceData structure
-	m_open m_high m_low m_close m_adj_close m_adj_open m_volume m_dividends m_splits */
+	static const int DATE_DATA_INDICATOR = 0;
+	static const int ADJ_OPEN_DATA_INDICATOR = 6;
+    static const int UNAVAILABLE_DATA = -999;
 };
-
-/*
-use IBM as reference ticker to calculate how many dates
-*/
-
 
 /*
 given date, what index it is?? - still need to implement
