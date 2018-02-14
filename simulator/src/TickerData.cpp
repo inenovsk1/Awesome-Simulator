@@ -11,9 +11,13 @@ NAME
     TickerData::parseFile
 
 SYNOPSIS
-    void TickerData::parseFile(std::string fileName);
+    void TickerData::parseFile(std::string pathToCurrentTickerFile,
+                           std::string pathToUniverseReferenceFile,
+                           DateTime earliestUniverseDate);
 
-    fileName    -> The name of a csv file containing data for the current ticker.
+    pathToCurrentTickerFile        -> Path to a csv file containing data for the current ticker.
+    pathToUniverseReferenceFile    -> Path to a csv file for the reference ticker.
+    DateTime  earliestUniverseDate -> Earliest date for which prices exist in the universe.
 
 DESCRIPTION
     Opens and reads a csv file containing data for the ticker that the file

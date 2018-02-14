@@ -4,11 +4,9 @@ Started documenting the exisitng code base.
 2/11/2018
 Changed parsing of csv files to use strtok_r instead of strtok.
 strtok_r is thread safe and therefore better than strtok!
-
 Finished documenting the existing code base.
 Added Utilities namespace that contains and implements stand alone
 functions used throughout the simulator.
-
 Implement parsing tickers whose data does not exist / starts later than
 simulator start date.
 
@@ -22,3 +20,4 @@ doesn't go all the way back to the first date in the universe.
 Completed code for using IBM as reference ticker and adding missing price
 data to newer tickers. The value used to specify unavailable data is -999
 and is defined as a constant in the TickerData class!
+Refactored many variables for better clarity.
