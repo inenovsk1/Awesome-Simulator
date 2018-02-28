@@ -19,4 +19,10 @@ add_executable(simulator
         src/TickerData.cpp
         src/TickerData.h
         src/Utilities.h
-        src/Utilities.cpp)
+        src/Utilities.cpp
+        src/Simulator.cpp
+        src/Simulator.h
+        src/MessageLog.cpp
+        src/MessageLog.h
+        src/TradingObject.cpp
+        src/TradingObject.h src/LongShort.cpp src/LongShort.h)

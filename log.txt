@@ -1,3 +1,4 @@
+----------------------------- Week 1 -------------------------------------
 2/8/2018
 Started documenting the exisitng code base.
 
@@ -21,3 +22,29 @@ Completed code for using IBM as reference ticker and adding missing price
 data to newer tickers. The value used to specify unavailable data is -999
 and is defined as a constant in the TickerData class!
 Refactored many variables for better clarity.
+
+----------------------------- Week 2 -------------------------------------
+2/18/2018
+Created and started working on the Simulator class.
+Created and started working on the MessageLog class.
+
+----------------------------- Week 3 -------------------------------------
+2/25/2018
+StockStream - This class is like a stream it will feed price data into it
+for each date. The idea is that when running the simulator one can use either the
+in memory databse, or data from some server, etc.. Might implement this for
+data access.
+
+2/27/2018
+DateTime class - created incrementDate function that increments the date to the next
+date and overloaded the ++ operator, which increments only week days, however,
+it skips weekend days since there is no stock data during the weekends,
+we do not really care about weekend days.
+Fixed Configurations class constructor to use an rvalue reference for
+efficiency reasons - i.e. so that it does not copy the whole data structure
+previously parsed by ConfigParser, but simply point to it instead!
+Decided to use uniqie_ptrs for class Simulator's member variables so that
+they can be initialized later on in the derived classes - i.e LongShort, etc..
+Created class LongShort and started working on implementation of the class.
+question - What is an appropriate signal value for a model?!?!?!
+

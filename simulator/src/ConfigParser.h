@@ -27,11 +27,11 @@
 class ConfigParser {
 
 public:
+	ConfigParser() = default;
 	explicit ConfigParser(std::string file_name);
 	~ConfigParser() = default;
 	void parseConfigurations();
 	std::map<std::string, std::unordered_map<std::string, std::string>> getConfigs();
-	std::map<std::string, std::unordered_map<std::string, std::string>> moveConfigs();
 
 	enum MatchResult {
 		Header,
@@ -55,14 +55,8 @@ private:
 	std::regex PARAMETER_REGEX;
 	std::regex COMMENT_REGEX;
 
-    //member functions
+    // member functions
 	MatchResult identifyLine(std::string a_line);
 	void storeValueInTable(std::string a_line);
 	void extractHeader(std::string a_line);
 };
-
-
-/*
-how many times has the accessParameter been accessed / misaccessed - not done
-
-myybe add options to config file to only load some field IDS, not all of them*/

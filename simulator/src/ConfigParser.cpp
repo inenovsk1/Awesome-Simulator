@@ -127,6 +127,9 @@ void ConfigParser::storeValueInTable(std::string a_line) {
 	auto pos = a_line.find('=');
 	std::string key = a_line.substr(0, pos);
 	std::string val = a_line.substr(pos + 1);
+
+    // convert key to lower case for easier usage later on..
+    key = Utils::toLowerCase(key);
 	m_configurations[m_currentHeader][key] = val;
 }
 
@@ -173,7 +176,3 @@ std::map<std::string, std::unordered_map<std::string, std::string>> ConfigParser
 	return m_configurations;
 }
 
-
-std::map<std::string, std::unordered_map<std::string, std::string>> ConfigParser::moveConfigs() {
-	return std::move(m_configurations);
-}

@@ -13,6 +13,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <ctime>
 
 class DateTime {
 
@@ -22,7 +23,9 @@ public:
 	DateTime(std::string str_date);
 	~DateTime() = default;
 	std::string toString() const;
+    void incrementDate();
 
+    DateTime & operator++();
     DateTime operator++(int);
     friend bool operator<(const DateTime & lhs, const DateTime & rhs);
     friend bool operator>(const DateTime & lhs, const DateTime & rhs);

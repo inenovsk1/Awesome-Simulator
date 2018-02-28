@@ -119,7 +119,7 @@ AUTHOR
 DATE
     November 20, 2017
 */
-Database & Database::getDatabaseInstance(std::string dataDirectory, std::string universeFile) {
+Database& Database::getDatabaseInstance(std::string dataDirectory, std::string universeFile) {
 	if (db == nullptr) {
         m_earliestDate = calculateEarliestUniverseDate(dataDirectory);
 		db = new Database(dataDirectory, universeFile, m_earliestDate);
@@ -182,6 +182,25 @@ DateTime Database::calculateEarliestUniverseDate(std::string dataDirectory) {
 }
 
 
+/*
+NAME
+    Database::getEarliestDate
+
+SYNOPSIS
+    DateTime Database::getEarliestDate();
+
+DESCRIPTION
+    Getter for earliest date with available historical data
+
+RETURNS
+    A DateTime object representing the earliest date with available historical data
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 13, 2018
+*/
 DateTime Database::getEarliestDate() {
     return m_earliestDate;
 }

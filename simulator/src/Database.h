@@ -19,7 +19,7 @@ public:
 	Database(Database const&) = delete;
 	Database operator=(Database const&) = delete;
 	~Database();
-	static Database & getDatabaseInstance(std::string dataDirectory, std::string universeFile);
+	static Database& getDatabaseInstance(std::string dataDirectory, std::string universeFile);
 	TickerData & operator[](std::string ticker);
     DateTime getEarliestDate();
 

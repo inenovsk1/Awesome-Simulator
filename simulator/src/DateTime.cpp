@@ -35,6 +35,7 @@ std::string DateTime::toString() const {
 	return str_date.str();
 }
 
+
 bool operator<(const DateTime& lhs, const DateTime& rhs) {
 	if (lhs.m_year < rhs.m_year) {
 		return true;
@@ -63,13 +64,135 @@ bool operator==(const DateTime& lhs, const DateTime& rhs) {
 	return false;
 }
 
+
 std::ostream & operator<<(std::ostream & out, const DateTime & date) {
 	out << date.toString();
 	return out;
 }
 
-DateTime DateTime::operator++(int dummyParameter) {
-    DateTime newTime(*this);
 
-    // implement this later
+/*
+NAME
+    DateTime::incrementDate
+
+SYNOPSIS
+    void DateTime::incrementDate();
+
+DESCRIPTION
+    Increments the date to the next date in the Gregorian calendar. This function
+    examines and handles all the edge cases when incrementing a date.
+    Tested and works!
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2017
+*/
+void DateTime::incrementDate() {
+    if(m_day == 31 && m_month == 12) {
+        m_year++;
+        m_day = 1;
+        m_month = 1;
+    }
+    else if(m_day == 31 && (m_month % 2 == 1 || m_month == 8)) {
+        m_day = 1;
+        m_month++;
+    }
+    else if(m_day == 30 && (m_month % 2 == 0 && !m_month == 8)) {
+        m_day = 1;
+        m_month++;
+    }
+    else if(m_day == 28 && m_month == 2) {
+        m_day = 1;
+        m_month++;
+    }
+    else {
+        m_day++;
+    }
+}
+
+
+/*
+NAME
+    DateTime::operator++
+
+SYNOPSIS
+    DateTime & DateTime::operator++();
+
+DESCRIPTION
+    Overloading the prefix ++ operator! This function calls the incrementDate function
+    internally, however, it has extra code to check whether the date to which it is
+    incremented is a weekend day or not. i.e. if the current date happens to be a
+    Friday, whenever we call date++, the new date will jump 2 days ahead to a Monday.
+    This is done with the purpose that there is no stock data during weekends, therefore one does
+    not really need to access those dates in the first place.
+
+RETURNS
+    The new incremented date
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2017
+*/
+DateTime & DateTime::operator++() {
+    this->incrementDate();
+
+	int numOfYearsSince1900 = this->m_year - 1900;
+
+	// structure representing time
+    tm currentTime;
+
+    currentTime.tm_year = numOfYearsSince1900;
+    currentTime.tm_mon = this->m_month - 1; // since tm_mon range is 0-11
+    currentTime.tm_mday = this->m_day;
+    currentTime.tm_isdst = -1;
+	currentTime.tm_hour = 10;
+	currentTime.tm_min = 0;
+	currentTime.tm_sec = 0;
+
+	mktime(&currentTime);
+
+	if(currentTime.tm_wday == 0) {
+        this->incrementDate();
+    }
+
+    if(currentTime.tm_wday == 6) {
+        this->incrementDate();
+        this->incrementDate();
+    }
+
+    return *this;
+}
+
+
+/*
+NAME
+    DateTime::operator++
+
+SYNOPSIS
+    DateTime DateTime::operator++(int dummyParameter);
+
+DESCRIPTION
+    Overloading the prefix ++ operator! This function calls prefix operator, however,
+    it returns the old value, as postfix operators usually do!
+
+RETURNS
+    The old date value
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2017
+*/
+DateTime DateTime::operator++(int dummyParameter) {
+    DateTime oldTime(*this);
+    operator++(); // pre-increment
+    return oldTime;
 }

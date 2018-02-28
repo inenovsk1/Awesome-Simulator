@@ -83,3 +83,7 @@ private:
 given date, what index it is?? - still need to implement
 */
 
+/*
+ * use IBM as a reference ticker to reserve initial space for vectors
+ * */
+

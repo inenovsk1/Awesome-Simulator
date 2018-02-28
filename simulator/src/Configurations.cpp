@@ -1,7 +1,28 @@
 #include "Configurations.h"
 
 
-// Move constructor
+/*
+NAME
+    Configurations::Configurations
+
+SYNOPSIS
+    Configurations::Configurations(std::map<std::string, std::unordered_map<std::string, std::string>>&& parsed_configs);
+
+    parsed_configs  -> This is an an rvalue reference to the configurations data structure
+                       for efficiency reasons! (does not do any copying!)
+
+DESCRIPTION
+    Constructor for the Configurations class
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2018
+*/
 Configurations::Configurations(std::map<std::string, std::unordered_map<std::string, std::string>>&& parsed_configs) {
 	m_configs = parsed_configs;
 }
@@ -14,7 +35,7 @@ void Configurations::modifyParam(std::string header, std::string key, std::strin
 
 
 // Returns a copy of the configurations
-std::map<std::string, std::unordered_map<std::string, std::string>> Configurations::getConfigurations() const {
+std::map<std::string, std::unordered_map<std::string, std::string>> Configurations::getInternalDataConfigs() const {
     return m_configs;
 }
 
@@ -50,7 +71,7 @@ DATE
     January 23, 2018
 */
 std::ostream& operator<< (std::ostream& a_out, const Configurations& a_configs) {
-	for (auto headerSection : a_configs.getConfigurations()) {
+	for (auto headerSection : a_configs.getInternalDataConfigs()) {
         a_out << "SECTION " << headerSection.first << ": " << std::endl;
 
         for (auto parameterPair : headerSection.second) {
