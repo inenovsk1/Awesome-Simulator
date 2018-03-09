@@ -33,7 +33,7 @@ Created and started working on the MessageLog class.
 StockStream - This class is like a stream it will feed price data into it
 for each date. The idea is that when running the simulator one can use either the
 in memory databse, or data from some server, etc.. Might implement this for
-data access.
+data access. Decided not to implement this since it won't be of big help
 
 2/27/2018
 DateTime class - created incrementDate function that increments the date to the next
@@ -42,9 +42,26 @@ it skips weekend days since there is no stock data during the weekends,
 we do not really care about weekend days.
 Fixed Configurations class constructor to use an rvalue reference for
 efficiency reasons - i.e. so that it does not copy the whole data structure
-previously parsed by ConfigParser, but simply point to it instead!
+previously parsed by ConfigParser, but simply change the pointer to it instead!
 Decided to use uniqie_ptrs for class Simulator's member variables so that
 they can be initialized later on in the derived classes - i.e LongShort, etc..
 Created class LongShort and started working on implementation of the class.
-question - What is an appropriate signal value for a model?!?!?!
+
+question 1 - What is an appropriate signal value for a model to go long or short?!?!?!
+		set by config parameter!!
+		entry threshlod
+		exit threshold
+question 2 - Trading object for each stock. Simulator -> hold vector of trading objects
+question 3 - field creation support class?
+
+
+Simulator is base class, it does all setting up and other models inherit from it
+i.e. one can run a model
+
+2/28/2018
+Created class TradingObject to hold for each ticker that will be traded - calculated
+signals, made transactions, capital, other statistics..
+
+----------------------------- Week 4 -------------------------------------
+03/01/2018
 

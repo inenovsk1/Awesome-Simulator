@@ -3,3 +3,7 @@
 //
 
 #include "TradingObject.h"
+
+TradingObject::TradingObject(std::string a_tickerName) {
+    m_tickerName = a_tickerName;
+}

@@ -27,6 +27,7 @@
 #include <sstream>
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 #include "DateTime.h"
 
 class TickerData {
@@ -36,7 +37,7 @@ public:
     TickerData(std::string ticker);
 	~TickerData() = default;
 	std::string head();
-    DateTime getFirstDate(std::string pathToFile);
+    DateTime readFirstDateFromFile(std::string pathToFile);
     bool insufficientData(std::string pathToFile, DateTime earliestUniverseDate);
 
     void parseFile(std::string pathToCurrentTickerFile,
@@ -47,9 +48,13 @@ public:
                                            DateTime earliestCurrentDate,
                                            std::string pathToUniverseReference);
 
-    void handleEmptyData(std::string pathToCurrentTickerFile,
-                         std::string pathToUniverseReference,
-                         DateTime earliestUniverseDate);
+    void handleMissingData(std::string pathToCurrentTickerFile,
+                           std::string pathToUniverseReference,
+                           DateTime earliestUniverseDate);
+
+    DateTime getEarliestDate();
+    std::vector<DateTime>::iterator begin();
+    std::vector<DateTime>::iterator end();
 
 	// this is a global enum! Might be better to use enum struct instead!
 	enum Field_ID : uint16_t {
@@ -67,7 +72,7 @@ public:
 
 	std::vector<double> operator[](DateTime date);
 	std::vector<double> operator[](std::string date);
-	std::vector<double> & operator[](Field_ID id);
+	std::vector<double> &operator[](Field_ID id);
 
 private:
 	std::vector<DateTime> m_tickerDates;

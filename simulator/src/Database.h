@@ -22,6 +22,8 @@ public:
 	static Database& getDatabaseInstance(std::string dataDirectory, std::string universeFile);
 	TickerData & operator[](std::string ticker);
     DateTime getEarliestDate();
+	static std::vector<std::string>::iterator begin();
+    static std::vector<std::string>::iterator end();
 
 private:
 	// member functions

@@ -5,18 +5,18 @@
 #pragma once
 
 
+#include <vector>
 #include "Simulator.h"
 
-class LongShort : Simulator {
+class ModelA : Simulator {
 
 public:
-    LongShort(int argc, char** argv);
-    void prepareModel() override;
+    ModelA(int argc, char** argv);
     double calculateTicker() override;
     void runSimulation() override;
 
 private:
-
+    std::vector<TradingObject> m_tradingContainer;
+    double m_20DayMovingAvg;
 };
-
 

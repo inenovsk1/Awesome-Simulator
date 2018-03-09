@@ -40,7 +40,7 @@ void TickerData::parseFile(std::string pathToCurrentTickerFile,
     bool internalVectorsCreated = false;
 
     if(insufficientData(pathToCurrentTickerFile, earliestUniverseDate)) {
-        handleEmptyData(pathToCurrentTickerFile, pathToUniverseReferenceFile, earliestUniverseDate);
+        handleMissingData(pathToCurrentTickerFile, pathToUniverseReferenceFile, earliestUniverseDate);
         internalVectorsCreated = true;
     }
 
@@ -61,7 +61,7 @@ void TickerData::parseFile(std::string pathToCurrentTickerFile,
 		std::vector<std::string> data;
 
         // setup and use strtok_r for parsing
-		char* singlePrice;
+		char *singlePrice;
         const char *delimiter = ",";
         char **nextToken;
 		singlePrice = strtok_r(lineData, delimiter, nextToken);
@@ -116,7 +116,7 @@ NAME
     TickerData::getFirstDate
 
 SYNOPSIS
-    DateTime TickerData::getFirstDate(std::string dataDirectory);
+    DateTime TickerData::readFirstDateFromFile(std::string dataDirectory);
 
     dataDirectory    -> Path to the directory that contains all data for the universe.
 
@@ -132,7 +132,7 @@ AUTHOR
 DATE
     February 13, 2018
 */
-DateTime TickerData::getFirstDate(std::string pathToFile) {
+DateTime TickerData::readFirstDateFromFile(std::string pathToFile) {
     std::string line;
     std::ifstream in(pathToFile);
 
@@ -177,8 +177,7 @@ DATE
     February 13, 2018
 */
 bool TickerData::insufficientData(std::string pathToFile, DateTime earliestUniverseDate) {
-    DateTime currentTickerEarliestDate = getFirstDate(pathToFile);
-
+    DateTime currentTickerEarliestDate = readFirstDateFromFile(pathToFile);
     return earliestUniverseDate == currentTickerEarliestDate ? false : true;
 }
 
@@ -241,7 +240,7 @@ NAME
     TickerData::handleEmptyData
 
 SYNOPSIS
-    void TickerData::handleEmptyData(std::string pathToCurrentTickerFile,
+    void TickerData::handleMissingData(std::string pathToCurrentTickerFile,
                                  std::string pathToUniverseReference,
                                  DateTime earliestUniverseDate);
 
@@ -263,15 +262,15 @@ AUTHOR
 DATE
     February 14, 2018
 */
-void TickerData::handleEmptyData(std::string pathToCurrentTickerFile,
-                                 std::string pathToUniverseReference,
-                                 DateTime earliestUniverseDate) {
+void TickerData::handleMissingData(std::string pathToCurrentTickerFile,
+                                   std::string pathToUniverseReference,
+                                   DateTime earliestUniverseDate) {
     for (int i = 0; i < TickerData::IDS_MAX + 1; ++i) {
         // populate the outer vector with inner vectors for each field
         m_priceData.push_back({});
     }
 
-    DateTime currentTickerEarliestDate = getFirstDate(pathToCurrentTickerFile);
+    DateTime currentTickerEarliestDate = readFirstDateFromFile(pathToCurrentTickerFile);
     std::vector<DateTime> missingDates = findMissingDates(earliestUniverseDate,
                                                           currentTickerEarliestDate,
                                                           pathToUniverseReference);
@@ -279,7 +278,7 @@ void TickerData::handleEmptyData(std::string pathToCurrentTickerFile,
     for (auto it = missingDates.begin(); it != missingDates.end(); ++it) {
         m_tickerDates.push_back(*it);
 
-        for (int i = 0; i < TickerData::IDS_MAX + 1; ++i) {
+        for (unsigned long i = 0; i < TickerData::IDS_MAX + 1; ++i) {
             m_priceData.at(i).push_back(UNAVAILABLE_DATA);
         }
     }
@@ -408,8 +407,14 @@ std::vector<double> TickerData::operator[](std::string date) {
 	DateTime latest = m_tickerDates.back();
 
 	if (current < earliest || current > latest) {
+        //msgLog writes data doesn't exist
 		return {};
 	}
+
+    if(std::find(m_tickerDates.begin(), m_tickerDates.end(), current) == m_tickerDates.end()) {
+        //msgLog writes data doesn't exist
+        return {};
+    }
 
 	unsigned long index = 0;
 	for (auto it = m_tickerDates.begin(); it != m_tickerDates.end(); ++it) {
@@ -458,4 +463,76 @@ DATE
 */
 std::vector<double> & TickerData::operator[](Field_ID id) {
 	return m_priceData[id];
+}
+
+
+/*
+NAME
+    TickerData::getEarliestDate
+
+SYNOPSIS
+    DateTime TickerData::getEarliestDate()
+
+DESCRIPTION
+    Get the earliest date with available data for this ticker
+
+RETURNS
+    Earliest date for this ticker
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 9, 2017
+*/
+DateTime TickerData::getEarliestDate() {
+    return m_tickerDates.front();
+}
+
+
+/*
+NAME
+    TickerData::begin
+
+SYNOPSIS
+    std::vector<DateTime>::iterator TickerData::begin()
+
+DESCRIPTION
+    Get the earliest date in existence for this ticker
+
+RETURNS
+    Earliest date for this ticker
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 9, 2017
+*/
+std::vector<DateTime>::iterator TickerData::begin() {
+    return m_tickerDates.begin();
+}
+
+
+/*
+NAME
+    TickerData::end
+
+SYNOPSIS
+    std::vector<DateTime>::iterator TickerData::end()
+
+DESCRIPTION
+    Get the latest date in existence for this ticker
+
+RETURNS
+    Latest date for this ticker
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 9, 2017
+*/
+std::vector<DateTime>::iterator TickerData::end() {
+    return m_tickerDates.end();
 }

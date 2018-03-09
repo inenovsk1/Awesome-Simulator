@@ -18,6 +18,7 @@
 #include "Database.h"
 #include "DateTime.h"
 #include "TickerData.h"
+#include "TradingObject.h"
 #include "MessageLog.h"
 #include "Utilities.h"
 
@@ -27,9 +28,12 @@ class Simulator {
 public:
     Simulator()=default;
     Simulator(int argc, char** argv);
-    virtual void prepareModel() = 0;
+    void prepareModel();
     virtual double calculateTicker() = 0;
     virtual void runSimulation() = 0;
+
+    void run_all_configs();
+    void run_with_different_parameter_specified_on_command_line();
 
 protected:
     int                              m_argc;

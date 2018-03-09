@@ -204,3 +204,51 @@ DATE
 DateTime Database::getEarliestDate() {
     return m_earliestDate;
 }
+
+
+/*
+NAME
+    Database::begin
+
+SYNOPSIS
+    std::vector<std::string>::iterator Database::begin()
+
+DESCRIPTION
+    Get an iterator to the beginning of the ticker list
+
+RETURNS
+    An iterator to the beginning of the ticker list
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 9, 2018
+*/
+std::vector<std::string>::iterator Database::begin() {
+    return m_universe.begin();
+}
+
+
+/*
+NAME
+    Database::end
+
+SYNOPSIS
+    std::vector<std::string>::iterator Database::end()
+
+DESCRIPTION
+    Get an iterator to the end of the ticker list
+
+RETURNS
+    An iterator to the end of the ticker list
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 9, 2018
+*/
+std::vector<std::string>::iterator Database::end() {
+    return m_universe.end();
+}
