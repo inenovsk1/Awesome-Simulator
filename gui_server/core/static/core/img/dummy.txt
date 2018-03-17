@@ -1,0 +1,2 @@
+This file exists only so that git adds this folder to working tree.
+It usually skips empty folders..

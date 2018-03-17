@@ -13,10 +13,10 @@ date++;
 
 ConfigParser parser(argv[1]);
 parser.parseConfigurations();
-Configurations configs(parser.moveConfigs());
+Configurations configs(std::move(parser.getConfigs()));
 
-Database & db = Database::getDatabaseInstance(configs.accessParameter("universe", "Data_Directory"),
-                                              configs.accessParameter("universe", "Universe_File"));
+Database& db = Database::getDatabaseInstance(configs.accessParameter("universe", "data_directory"),
+                                             configs.accessParameter("universe", "universe_file"));
 cout << "Done loading DB!" << endl;
 
 std::vector<double> price_point = db["AAPL"]["2012-10-05"];
@@ -40,3 +40,5 @@ cout << "Earliest simulation date is " << db.getEarliestDate() << endl;
 
 cout << "\nConfigurations used:" << endl;
 cout << configs << endl;
+
+return 0;

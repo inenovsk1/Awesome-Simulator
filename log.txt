@@ -63,5 +63,11 @@ Created class TradingObject to hold for each ticker that will be traded - calcul
 signals, made transactions, capital, other statistics..
 
 ----------------------------- Week 4 -------------------------------------
-03/01/2018
-
+None
+----------------------------- Week 5 -------------------------------------
+03/17/2018
+Decided to put the configurations in the Simulator class so that I have better
+access to them from the models.
+Did a simultion where I calculate a signal and everything works fine.
+Also started work on a server that will allow for an easy usage of the
+simulator. 

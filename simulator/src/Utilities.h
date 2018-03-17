@@ -1,4 +1,6 @@
 /*
+ * ~~~~~~~~~~~~~~~~~~~~ Utilities ~~~~~~~~~~~~~~~~~~~~
+ *
  * This header represents different utility stand-alone functions used throughout
  * the simulator. They are put in a separate namespace called Utils
  * */

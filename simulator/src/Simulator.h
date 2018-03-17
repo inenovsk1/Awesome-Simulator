@@ -29,11 +29,13 @@ public:
     Simulator()=default;
     Simulator(int argc, char** argv);
     void prepareModel();
-    virtual double calculateTicker() = 0;
-    virtual void runSimulation() = 0;
-
+    void recordStatistics();
     void run_all_configs();
     void run_with_different_parameter_specified_on_command_line();
+
+    virtual double calculateSignal(double a_currentAdjClose) = 0;
+    virtual void handleTrading(double signal) = 0;
+    virtual void runSimulation() = 0;
 
 protected:
     int                              m_argc;
@@ -42,4 +44,11 @@ protected:
     std::unique_ptr<ConfigParser>    m_parser;
     std::unique_ptr<Configurations>  m_configs;
     std::unique_ptr<MessageLog>      m_msgLog;
+    std::vector<TradingObject>       m_tradingContainer;
+
+    double    m_availableCap;
+    double    m_maxCapPerStock;
+    double    m_capInCurrentStock;
+    double    m_entrySig;
+    double    m_exitSig;
 };
