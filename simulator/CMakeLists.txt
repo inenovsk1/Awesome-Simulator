@@ -25,4 +25,6 @@ add_executable(simulator
         src/MessageLog.cpp
         src/MessageLog.h
         src/TradingObject.cpp
-        src/TradingObject.h src/ModelA.cpp src/ModelA.h)
+        src/TradingObject.h
+        src/ModelA.cpp
+        src/ModelA.h)

@@ -38,7 +38,7 @@ DATE
     March 14, 2018
 */
 double ModelA::calculateSignal(double a_currentAdjClose) {
-    return -((a_currentAdjClose - m_20DayMovingAvg) / m_20DayMovingAvg) * 100;
+    return ((a_currentAdjClose - m_20DayMovingAvg) / m_20DayMovingAvg) * 100; // removed the negative sign upfront (-)
 }
 
 
@@ -85,11 +85,6 @@ void ModelA::calculate20DayMovingAvg(double a_todayAdjClose) {
 }
 
 
-void ModelA::handleTrading(double signal) {
-
-}
-
-
 /*
 NAME
     ModelA::runSimulation
@@ -121,8 +116,22 @@ void ModelA::runSimulation() {
     // prepare the model for a simulation run
     prepareModel();
 
+    double initialCap = m_availableCap;
+
     // iterate over all tickers in the database
     for(auto tickerName = m_db->begin(); tickerName != m_db->end(); ++tickerName) {
+        //setup initial variables for each ticker
+        m_currentDaysInPosition = 0;
+        m_capInCurrentStock = 0;
+        m_currentPositionsHeld = 0;
+        m_signalInvertionsPerInstrument = 0;
+
+        std::cout << "Currently trading ticker -> " << *tickerName << "\n";
+
+        double totalCapitalInCirculationForTicker = m_availableCap;
+        m_out << "Stats for ticker -> " << *tickerName << ":\n";
+        m_out << "Available capital -> " << m_availableCap << "\n";
+
         // get the ticker historical data
         TickerData& currentTickerData = (*m_db)[*tickerName];
 
@@ -169,17 +178,35 @@ void ModelA::runSimulation() {
 
             //calculate signal
             double signal = calculateSignal(currentAdjClose);
-            std::cout << "Calculating ticker for " << *tickerName << " at " << *date << ": " << signal << std::endl;
+            //std::cout << "Calculating signal for ticker " << *tickerName << " at " << *date << ": " << signal << std::endl;
+            //m_out << "Calculating signal for ticker " << *tickerName << " at " << *date << ": " << signal << "\n";
 
             // update the new moving average
             calculate20DayMovingAvg(currentAdjClose);
 
+            //calculate an average price from the high and the low price and trade upon it
+            double tradingPrice = (todayPrices[TickerData::FieldID_HIGH] + todayPrices[TickerData::FieldID_HIGH]) / 2;
+
             // determine whether to go long or short depending on the signal and buy/sell
-            handleTrading(signal);
+            handleTrading(signal, tradingPrice);
         }
+
+        totalCapitalInCirculationForTicker -= m_availableCap;
+        m_out << "Available Capital after trading -> " << m_availableCap << "\n";
+
+        if(totalCapitalInCirculationForTicker > 0) {
+            m_out << "Capital lost from stock -> " << totalCapitalInCirculationForTicker << "\n";
+        }
+        else {
+            m_out << "Capital won from stock -> " << std::abs(totalCapitalInCirculationForTicker) << "\n";
+        }
+
+        m_out << "# Invertions occurred: " << m_signalInvertionsPerInstrument << "\n";
     }
 
     // record statistics for the simulation
     recordStatistics();
+
+    std::cout << "Total earnings -> " << (m_availableCap - initialCap) << std::endl;
 }
 

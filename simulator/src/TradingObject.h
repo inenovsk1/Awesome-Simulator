@@ -31,6 +31,7 @@ private:
     double       m_capitalInObject;
     int          m_totalTransactions; // total number of buy/sell for this trading object
     int          m_numShares;
+
     std::vector<DateTime>  m_tradingDates;
     std::vector<double>    m_dailyPNL;
 };

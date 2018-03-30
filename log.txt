@@ -71,3 +71,12 @@ access to them from the models.
 Did a simultion where I calculate a signal and everything works fine.
 Also started work on a server that will allow for an easy usage of the
 simulator. 
+
+----------------------------- Week 6 -------------------------------------
+None
+
+----------------------------- Week 7 -------------------------------------
+Question 1: Difference between daily, monthly and transaction reports?
+Question 2: How many stocks to buy per good signal?
+Need to handle if current days in position > max days in position.
+Use (sort of) genetic algorithm to randomly modify prices in order to optimise parameters better.

@@ -14,6 +14,7 @@
 
 
 #include <vector>
+#include <cstdlib>
 #include "Simulator.h"
 
 class ModelA : Simulator {
@@ -28,16 +29,12 @@ public:
 private:
     // member functions
     double calculateSignal(double a_currentAdjClose)   override;
-    void handleTrading(double signal)                  override;
-
     void calculate20DayMovingAvg(double a_todayAdjClose);
     void calculateDailyPNL(double a_todayClose);
 
     // member variables
-    double  m_20DayMovingAvg;
-    double *m_twentyDaysPrices;
-
-    int     m_currentDaysInPosition;
-    const int MOVING_AVG_DAY_RANGE = 20;
+    double      m_20DayMovingAvg;
+    double*     m_twentyDaysPrices;
+    const int   MOVING_AVG_DAY_RANGE = 20;
 };
 
