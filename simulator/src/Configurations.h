@@ -16,7 +16,7 @@ class Configurations {
 
 public:
 	Configurations() = default;
-	explicit Configurations(std::map<std::string, std::unordered_map<std::string, std::string>>&& parsed_configs); // rvalue reference for efficiency
+	explicit Configurations(std::map<std::string, std::unordered_map<std::string, std::string>> parsed_configs);
 	~Configurations() = default;
 	void modifyParam(std::string header, std::string key, std::string new_val);
     std::string accessParameter(std::string header, std::string key);

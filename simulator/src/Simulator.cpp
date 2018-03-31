@@ -36,7 +36,7 @@ void Simulator::prepareModel() {
     m_parser = std::make_unique<ConfigParser>(m_argv[1]);
     m_parser->parseConfigurations();
 
-    m_configs = std::make_unique<Configurations>(std::move(m_parser->getConfigs()));
+    m_configs = std::make_unique<Configurations>(m_parser->getConfigs());
     m_msgLog  = std::make_unique<MessageLog>();
 
     m_db = &(Database::getDatabaseInstance(m_configs->accessParameter("universe", "data_directory"),
@@ -60,6 +60,28 @@ void Simulator::prepareModel() {
 }
 
 
+/*
+NAME
+    Simulator::invertSignals
+
+SYNOPSIS
+    void Simulator::invertSignals()
+
+DESCRIPTION
+    To invert the signs of the entry and exit parameters whenever
+    the trading signal changes signs. Also, reset the current days
+    in position to 0. Invertion is curcial for trading, because this
+    is how one knows when to buy and when to sell
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 28, 2018
+*/
 void Simulator::invertSignals() {
     m_signalInvertionsPerInstrument++;
     m_currentDaysInPosition = 0;
@@ -69,12 +91,37 @@ void Simulator::invertSignals() {
 }
 
 
+/*
+NAME
+    Simulator::positiveSignTrading
+
+SYNOPSIS
+    void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice)
+
+    a_signal        -> The calculated signal for the current date, current stock
+    a_TickerPrice   -> The price for the corresponding ticker at the current trading
+                       date
+
+DESCRIPTION
+    Whenever the entry and exit parameters are positive we want
+    to sell!! Handle selling my taking into consideration all of
+    the given parameters and if possible sell instruments
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 28, 2018
+*/
 void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice) {
     // code to handle selling
 
     if(a_signal >= m_exitSig) {
         //halt trading, hold on positions, and wait for price to go up
-        //std::cout << "Signal too high! Halt!" << std::endl;
+        m_out << "Signal too high! Halt!" << std::endl;
         return;
     }
 
@@ -84,7 +131,7 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice) {
         bool daysInPositionOver = m_currentDaysInPosition > m_exitDaysInPosition;
 
         if(daysInPositionOver) {
-            //std::cout << "Max days in position exceeded! Halt position and don't trade anymore!" << std::endl;
+            m_out << "Max days in position exceeded! Halt position and don't trade anymore!" << "\n";
             return;
         }
 
@@ -98,12 +145,37 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice) {
 }
 
 
+/*
+NAME
+    Simulator::negativeSignTrading
+
+SYNOPSIS
+    void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice)
+
+    a_signal        -> The calculated signal for the current date, current stock
+    a_TickerPrice   -> The price for the corresponding ticker at the current trading
+                       date
+
+DESCRIPTION
+    Whenever the entry and exit parameters are negative we want
+    to buy!! Handle buying my taking into consideration all of
+    the given parameters and if possible buy instruments
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 28, 2018
+*/
 void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice) {
     // code to handle buying
 
     if(a_signal <= m_exitSig) {
         //halt trading, hold on positions, and wait for price to go up
-        //std::cout << "Signal too low! Halt!" << std::endl;
+        m_out << "Signal too low! Halt!" << "\n";
         return;
     }
 
@@ -114,8 +186,8 @@ void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice) {
         bool   actionPerformed               = false;
 
         if(daysInPositionOver || m_currentPositionsHeld > m_maxPositionsPerInstrument) {
-            //std::cout << "Days in position exceeded or too many instruments held! " <<
-            //             "Halt position and don't trade anymore!" << std::endl;
+            m_out << "Days in position exceeded or too many instruments held! " <<
+                     "Halt position and don't trade anymore!\n";
             return;
         }
 
@@ -131,7 +203,7 @@ void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice) {
             m_out << m_positionsPerTradeBuy << " stocks were bought today at a price of " << a_TickerPrice << "\n";
         }
         else {
-            //std::cout << "No trading was performed today!" << "\n";
+            m_out << "No trading was performed today!\n";
         }
     }
 }
@@ -143,6 +215,48 @@ NAME
 
 SYNOPSIS
     void Simulator::handleTrading(double a_signal, int& a_daysInPosition)
+
+    a_signal        -> The calculated signal for the current date, current stock
+    a_TickerPrice   -> The price for the corresponding ticker at the current trading
+                       date
+
+DESCRIPTION
+    Main function to handle trading. It will make sure that the
+    signal hasn't changed signs, but if it has then it will call invertSign.
+    After that it uses positive or negative tradding depending on the
+    inverted signal
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 28, 2018
+*/
+void Simulator::handleTrading(double a_signal, double& a_TickerPrice) {
+
+    if((m_positiveSign && a_signal < 0) || (!m_positiveSign && a_signal > 0)) {
+        invertSignals();
+    }
+
+    if(m_positiveSign) {
+        positiveSignTrading(a_signal, a_TickerPrice);
+    }
+    else {
+        negativeSignTrading(a_signal, a_TickerPrice);
+    }
+
+}
+
+
+/*
+NAME
+    Simulator::recordStatistics
+
+SYNOPSIS
+    void Simulator::recordStatistics()
 
 DESCRIPTION
     Fill this when function is done..
@@ -156,24 +270,6 @@ AUTHOR
 DATE
     March 28, 2018
 */
-void Simulator::handleTrading(double a_signal, double& a_TickerPrice) {
-    //std::cout << "Available Capital: " << m_availableCap << "\n";
-    //std::cout << "Capital in Current Stock: " << m_capInCurrentStock << "\n";
-    //std::cout << "Current Days in Position: " << m_currentDaysInPosition << "\n";
-
-    if((m_positiveSign && a_signal < 0) || (!m_positiveSign && a_signal > 0)) {
-        invertSignals();
-    }
-
-    if(m_positiveSign) {
-        positiveSignTrading(a_signal, a_TickerPrice);
-    }
-    else {
-        negativeSignTrading(a_signal, a_TickerPrice);
-    }
-}
-
-
 void Simulator::recordStatistics() {
     m_out << "\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     m_out << "Configurations used for current simulation:\n";

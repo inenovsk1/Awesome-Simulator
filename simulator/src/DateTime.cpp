@@ -1,7 +1,29 @@
 #include "DateTime.h"
 
 
-// constructor using 3 integers for year, month, day
+/*
+NAME
+    DateTime::DateTime
+
+SYNOPSIS
+    DateTime::DateTime(int a_year, int a_month, int a_day)
+
+    a_year   -> Year to be used for the date
+    a_month  -> Month to be used for the date
+    a_day    -> Day to be used for the date
+
+DESCRIPTION
+    Constructs a DateTime object from 3 integers
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2017
+*/
 DateTime::DateTime(int a_year, int a_month, int a_day) {
 	m_year = a_year;
 	m_month = a_month;
@@ -9,9 +31,30 @@ DateTime::DateTime(int a_year, int a_month, int a_day) {
 }
 
 
-// constructing a DateTime object using a string
-DateTime::DateTime(std::string str_date) {
-	auto date = (char*)str_date.c_str();
+/*
+NAME
+    DateTime::DateTime
+
+SYNOPSIS
+    DateTime::DateTime(std::string a_strDate)
+
+    a_strDate   -> String representation of date to be used. It must be
+    			   in YYYY-MM-DD format!
+
+DESCRIPTION
+    Constructs a DateTime object from string
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2017
+*/
+DateTime::DateTime(std::string a_strDate) {
+	auto date = (char*)a_strDate.c_str();
 	char* num;
 	num = strtok(date, "-");
 
@@ -29,6 +72,25 @@ DateTime::DateTime(std::string str_date) {
 }
 
 
+/*
+NAME
+    DateTime::toString
+
+SYNOPSIS
+    std::string DateTime::toString() const
+
+DESCRIPTION
+    Gives a string representation of a DateTime object in YYYY-MM-DD format
+
+RETURNS
+    The string representation of the current DateTime object
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    February 27, 2017
+*/
 std::string DateTime::toString() const {
 	std::ostringstream str_date;
 	str_date << m_year << "-" << m_month << "-" << m_day;
@@ -36,6 +98,10 @@ std::string DateTime::toString() const {
 }
 
 
+/*
+ * Overloaded less than, greater than, equal and stream extraction operators
+ * for better and easier usability of the class
+*/
 bool operator<(const DateTime& lhs, const DateTime& rhs) {
 	if (lhs.m_year < rhs.m_year) {
 		return true;

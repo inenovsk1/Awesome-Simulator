@@ -146,6 +146,8 @@ void ModelA::runSimulation() {
 
         //iterate over existing dates
         for(auto date = currentTickerData.begin(); date != currentTickerData.end(); ++date) {
+            m_out << "Date -> " << *date << "\n";
+
             // get today's prices
             std::vector<double> todayPrices = currentTickerData[*date];
 
@@ -179,7 +181,7 @@ void ModelA::runSimulation() {
             //calculate signal
             double signal = calculateSignal(currentAdjClose);
             //std::cout << "Calculating signal for ticker " << *tickerName << " at " << *date << ": " << signal << std::endl;
-            //m_out << "Calculating signal for ticker " << *tickerName << " at " << *date << ": " << signal << "\n";
+            m_out << "Calculating signal for ticker " << *tickerName << ": " << signal << "\n";
 
             // update the new moving average
             calculate20DayMovingAvg(currentAdjClose);

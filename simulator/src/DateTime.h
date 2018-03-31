@@ -20,7 +20,7 @@ class DateTime {
 public:
 	DateTime() = default;
 	DateTime(int a_year, int a_month, int a_day);
-	DateTime(std::string str_date);
+	DateTime(std::string a_strDate);
 	~DateTime() = default;
 	std::string toString() const;
     void incrementDate();
