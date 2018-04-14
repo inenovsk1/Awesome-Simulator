@@ -129,14 +129,14 @@ void ModelA::runSimulation() {
         std::cout << "Currently trading ticker -> " << *tickerName << "\n";
 
         double totalCapitalInCirculationForTicker = m_availableCap;
-        m_out << "Stats for ticker -> " << *tickerName << ":\n";
+        m_out << "\nStats for ticker -> " << *tickerName << ":\n";
         m_out << "Available capital -> " << m_availableCap << "\n";
 
         // get the ticker historical data
         TickerData& currentTickerData = (*m_db)[*tickerName];
 
         // create a trading object with the ticker name
-        m_tradingContainer.emplace_back(TradingObject(*tickerName));
+        TradingObject currentTradingObject(*tickerName);
 
         //skip trading the first 20 days until there is enough info for calculating moving avg
         short twentyDays = 0;
@@ -146,7 +146,7 @@ void ModelA::runSimulation() {
 
         //iterate over existing dates
         for(auto date = currentTickerData.begin(); date != currentTickerData.end(); ++date) {
-            m_out << "Date -> " << *date << "\n";
+            currentTradingObject.addDate(*date);
 
             // get today's prices
             std::vector<double> todayPrices = currentTickerData[*date];
@@ -154,6 +154,10 @@ void ModelA::runSimulation() {
             // collect the first 20 days for calculating moving avg
             if(twentyDays < MOVING_AVG_DAY_RANGE) {
                 m_twentyDaysPrices[twentyDays] = todayPrices[TickerData::FieldID_ADJ_CLOSE];
+                currentTradingObject.addSignal(0);
+                currentTradingObject.addShares(0);
+                currentTradingObject.addCapital(0);
+                currentTradingObject.addTransaction(0);
                 twentyDays++;
                 continue;
             }
@@ -173,6 +177,10 @@ void ModelA::runSimulation() {
 
             // defend against dates for which historical data does not exist e.g. July 4th
             if(todayPrices.empty()) {
+                currentTradingObject.addSignal(0);
+                currentTradingObject.addShares(0);
+                currentTradingObject.addCapital(0);
+                currentTradingObject.addTransaction(0);
                 continue;
             }
 
@@ -180,18 +188,21 @@ void ModelA::runSimulation() {
 
             //calculate signal
             double signal = calculateSignal(currentAdjClose);
+            currentTradingObject.addSignal(signal);
             //std::cout << "Calculating signal for ticker " << *tickerName << " at " << *date << ": " << signal << std::endl;
-            m_out << "Calculating signal for ticker " << *tickerName << ": " << signal << "\n";
 
             // update the new moving average
             calculate20DayMovingAvg(currentAdjClose);
 
-            //calculate an average price from the high and the low price and trade upon it
-            double tradingPrice = (todayPrices[TickerData::FieldID_HIGH] + todayPrices[TickerData::FieldID_HIGH]) / 2;
+            // use quadruple root of the product of open, low, high, close prices to approximate the trading price
+            double tradingPrice = std::pow(todayPrices[TickerData::FieldID_OPEN] * todayPrices[TickerData::FieldID_HIGH] *
+                                           todayPrices[TickerData::FieldID_LOW] * todayPrices[TickerData::FieldID_CLOSE], 1.0/4);
 
             // determine whether to go long or short depending on the signal and buy/sell
-            handleTrading(signal, tradingPrice);
+            handleTrading(signal, tradingPrice, currentTradingObject);
         }
+
+        m_tradingContainer.push_back(currentTradingObject);
 
         totalCapitalInCirculationForTicker -= m_availableCap;
         m_out << "Available Capital after trading -> " << m_availableCap << "\n";
@@ -206,9 +217,10 @@ void ModelA::runSimulation() {
         m_out << "# Invertions occurred: " << m_signalInvertionsPerInstrument << "\n";
     }
 
+    std::cout << "Total earnings -> " << (m_availableCap - initialCap) << std::endl;
+    m_out << "\nTotal earnings -> " << (m_availableCap - initialCap) << "\n";
+
     // record statistics for the simulation
     recordStatistics();
-
-    std::cout << "Total earnings -> " << (m_availableCap - initialCap) << std::endl;
 }
 

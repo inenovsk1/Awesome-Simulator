@@ -7,7 +7,8 @@
  *
  * This class will hold trading information about the ticker that it represents.
  * Information like the ticker name, the current capital invested in this ticker,
- * total transactions done, daily PNL, and more..
+ * total transactions done, daily PNL, and more. It will also keep history of number
+ * of transactions done for each day, calculated signal for each trading date, etc..
  * */
 
 #pragma once
@@ -23,15 +24,30 @@ class TradingObject {
 public:
     TradingObject()=default;
     explicit TradingObject(std::string a_tickerName);
-    void buy(int amount);
-    void sell(int amount);
+    void addCapital(double a_amount);
+    void removeCapital(double a_amount);
+    void addTransaction(int a_amount);
+    void addShares(int a_amount);
+    void removeShares(int a_amount);
+    void addSignal(double a_signal);
+    void addDate(DateTime a_date);
+    std::string getName();
+    std::vector<DateTime> getDates();
+    std::vector<double> getSignals();
+    std::vector<double> getDailyCapital();
+    std::vector<int> getDailyTransactions();
+    std::vector<int> getDailyShares();
 
 private:
     std::string  m_tickerName;
     double       m_capitalInObject;
-    int          m_totalTransactions; // total number of buy/sell for this trading object
+    int          m_totalTransactions; // total number of going long/short for this trading object
     int          m_numShares;
 
     std::vector<DateTime>  m_tradingDates;
+    std::vector<double>    m_signals;
     std::vector<double>    m_dailyPNL;
+    std::vector<double>    m_dailyCapital;
+    std::vector<int>       m_dailyTransactions;
+    std::vector<int>       m_dailyShares;
 };

@@ -3,8 +3,8 @@ project(simulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-#set(CMAKE_BUILD_TYPE Release)  # RELEASE BUILD
-set(CMAKE_BUILD_TYPE Debug)    # DEBUG BUILD
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 add_executable(simulator
         src/ConfigParser.cpp

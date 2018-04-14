@@ -78,5 +78,8 @@ None
 ----------------------------- Week 7 -------------------------------------
 Question 1: Difference between daily, monthly and transaction reports?
 Question 2: How many stocks to buy per good signal?
-Need to handle if current days in position > max days in position.
-Use (sort of) genetic algorithm to randomly modify prices in order to optimise parameters better.
+Question 3: What price should I use when doing the trades - high, low, average of the two, something else?
+
+Concern 1: Currently not taking care of stock splits in the data!
+
+Suggestion 1: Use (sort of) genetic algorithm to randomly modify prices in order to optimise parameters better.

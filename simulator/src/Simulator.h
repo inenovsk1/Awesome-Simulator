@@ -14,7 +14,9 @@
 #pragma once
 
 #include <memory>
+#include <iomanip>
 #include <fstream>
+#include <cmath>
 
 #include "ConfigParser.h"
 #include "Configurations.h"
@@ -32,7 +34,7 @@ public:
     Simulator()=default;
     Simulator(int argc, char** argv);
     void prepareModel();
-    void handleTrading(double a_signal, double& a_TickerPrice);
+    void handleTrading(double a_signal, double& a_TickerPrice, TradingObject& a_tradingObject);
     void recordStatistics();
     void run_all_configs();
     void run_with_different_parameter_specified_on_command_line();
@@ -41,7 +43,7 @@ public:
     virtual void   runSimulation() = 0;
 
 protected:
-    //variables
+    // member variables
     int                              m_argc;
     char**                           m_argv;
     Database*                        m_db;
@@ -69,9 +71,14 @@ protected:
     int       m_transactionsReport;
 
     std::ofstream m_out;
+    std::ofstream m_transactionStatistics;
+    std::ofstream m_dailyStatistics;
 
-    // functions
+    // member functions
     void invertSignals();
-    void positiveSignTrading(double& a_signal, double& a_TickerPrice);
-    void negativeSignTrading(double& a_signal, double& a_TickerPrice);
+    void positiveSignTrading(double& a_signal, double& a_TickerPrice, TradingObject& a_tradingObject);
+    void negativeSignTrading(double& a_signal, double& a_TickerPrice, TradingObject& a_tradingObject);
+
+    void dailyReport();
+    void transactionReport();
 };

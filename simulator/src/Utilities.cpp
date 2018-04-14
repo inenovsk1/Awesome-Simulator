@@ -182,3 +182,14 @@ void Utils::determineCommandLineOptions(int argc, char** argv) {
             exit(1);
     }
 }
+
+
+std::string Utils::today() {
+    time_t     now = time(0);
+    tm         tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
+    return buf;
+}

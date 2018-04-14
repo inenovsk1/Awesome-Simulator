@@ -93,7 +93,14 @@ DATE
 */
 std::string DateTime::toString() const {
 	std::ostringstream str_date;
-	str_date << m_year << "-" << m_month << "-" << m_day;
+
+	if(m_day < 10) {
+        str_date << m_year << "-" << m_month << "-0" << m_day;
+	}
+	else {
+        str_date << m_year << "-" << m_month << "-" << m_day;
+	}
+
 	return str_date.str();
 }
 

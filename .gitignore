@@ -1,4 +1,6 @@
 stock-data/
 simulator/*build*/
 simulator/.idea/
-TestingResults.txt
+TradingSummary.txt
+DailyReport.txt
+TransactionReport.txt

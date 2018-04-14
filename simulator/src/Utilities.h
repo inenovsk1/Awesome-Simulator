@@ -17,6 +17,7 @@ namespace Utils {
     void handleCommandLineArguments(std::string a_argument);
     void determineCommandLineOptions(int argc, char** argv);
     void showUsage();
+    std::string today();
 }
 
 #endif //SIMULATOR_UTILITIES_H

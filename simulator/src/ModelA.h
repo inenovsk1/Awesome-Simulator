@@ -30,7 +30,6 @@ private:
     // member functions
     double calculateSignal(double a_currentAdjClose)   override;
     void calculate20DayMovingAvg(double a_todayAdjClose);
-    void calculateDailyPNL(double a_todayClose);
 
     // member variables
     double      m_20DayMovingAvg;
