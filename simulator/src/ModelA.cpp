@@ -122,9 +122,11 @@ void ModelA::runSimulation() {
     for(auto tickerName = m_db->begin(); tickerName != m_db->end(); ++tickerName) {
         //setup initial variables for each ticker
         m_currentDaysInPosition = 0;
-        m_capInCurrentStock = 0;
-        m_currentPositionsHeld = 0;
+        m_capInStock = 0;
+        m_sharesHeld = 0;
         m_signalInvertionsPerInstrument = 0;
+        m_capInvested = 0;
+        m_capReturned = 0;
 
         std::cout << "Currently trading ticker -> " << *tickerName << "\n";
 
@@ -142,7 +144,7 @@ void ModelA::runSimulation() {
         short twentyDays = 0;
 
         //reset current amount invested in stock
-        m_capInCurrentStock = 0;
+        m_capInStock = 0;
 
         //iterate over existing dates
         for(auto date = currentTickerData.begin(); date != currentTickerData.end(); ++date) {
@@ -158,6 +160,11 @@ void ModelA::runSimulation() {
                 currentTradingObject.addShares(0);
                 currentTradingObject.addCapital(0);
                 currentTradingObject.addTransaction(0);
+                currentTradingObject.addDailyPNL(0);
+                currentTradingObject.addCumulativePNL(0);
+                currentTradingObject.addTotalMarketValue(0);
+                currentTradingObject.addNetMarketValue(0);
+                currentTradingObject.addImbalance(0);
                 twentyDays++;
                 continue;
             }
@@ -181,6 +188,11 @@ void ModelA::runSimulation() {
                 currentTradingObject.addShares(0);
                 currentTradingObject.addCapital(0);
                 currentTradingObject.addTransaction(0);
+                currentTradingObject.addDailyPNL(0);
+                currentTradingObject.addCumulativePNL(0);
+                currentTradingObject.addTotalMarketValue(0);
+                currentTradingObject.addNetMarketValue(0);
+                currentTradingObject.addImbalance(0);
                 continue;
             }
 

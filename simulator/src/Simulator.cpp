@@ -8,7 +8,13 @@
 Simulator::Simulator(int argc, char** argv) : m_argc(argc), m_argv(argv) {
     m_out.open("TradingSummary.txt");
     m_transactionStatistics.open("TransactionReport.txt");
+    m_dailyStatistics.open("DailyReport.txt");
     m_positiveSign = true;
+
+    m_yesterdayCapInStock = 0;
+    m_yesterdayAvailableCap = m_availableCap;
+    m_capInvested = 0;
+    m_capReturned = 0;
 }
 
 
@@ -133,8 +139,8 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
     }
 
     if(a_signal >= m_entrySig) {
-        int  numInstrumentsSell = m_currentPositionsHeld > m_positionsPerTradeSell ?
-                                  m_positionsPerTradeSell : m_currentPositionsHeld;
+        int  numInstrumentsSell = m_sharesHeld > m_positionsPerTradeSell ?
+                                  m_positionsPerTradeSell : m_sharesHeld;
 
         bool daysInPositionOver = m_currentDaysInPosition > m_exitDaysInPosition;
 
@@ -146,15 +152,18 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
             return;
         }
 
-        m_currentPositionsHeld -= numInstrumentsSell;
+        m_sharesHeld -= numInstrumentsSell;
         m_availableCap += numInstrumentsSell * a_TickerPrice;
-        m_capInCurrentStock -= numInstrumentsSell * a_TickerPrice;
+        m_capInStock -= numInstrumentsSell * a_TickerPrice;
         m_currentDaysInPosition++;
 
         a_tradingObject.removeShares(numInstrumentsSell);
         a_tradingObject.addCapital(numInstrumentsSell * a_TickerPrice);
         a_tradingObject.addTransaction(numInstrumentsSell);
+        m_capReturned += numInstrumentsSell * a_TickerPrice;
 
+        // daily risk of return
+        //a_tradingObject.addDailyRateOfReturn((a_TickerPrice - m_priceAtWhichWentLong) / m_priceAtWhichWentLong * 100);
         actionPerformed = true;
     }
 
@@ -213,10 +222,10 @@ void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice, Tra
 
     if(a_signal <= m_entrySig) {
         double potentialAvailableCapAfterBuy = m_availableCap - m_positionsPerTradeBuy * a_TickerPrice;
-        double CapInStockAfterBuy            = m_capInCurrentStock + m_positionsPerTradeBuy * a_TickerPrice;
+        double CapInStockAfterBuy            = m_capInStock + m_positionsPerTradeBuy * a_TickerPrice;
         bool   daysInPositionOver            = m_currentDaysInPosition > m_exitDaysInPosition;
 
-        if(daysInPositionOver || m_currentPositionsHeld > m_maxPositionsPerInstrument) {
+        if(daysInPositionOver || m_sharesHeld > m_maxPositionsPerInstrument) {
 
             a_tradingObject.addShares(0);
             a_tradingObject.removeCapital(0);
@@ -226,15 +235,17 @@ void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice, Tra
         }
 
         if(potentialAvailableCapAfterBuy > 0 && CapInStockAfterBuy < m_maxCapPerStock) {
-            m_currentPositionsHeld += m_positionsPerTradeBuy;
+            m_sharesHeld += m_positionsPerTradeBuy;
             m_availableCap -= m_positionsPerTradeBuy * a_TickerPrice;
-            m_capInCurrentStock += m_positionsPerTradeBuy * a_TickerPrice;
+            m_capInStock += m_positionsPerTradeBuy * a_TickerPrice;
             m_currentDaysInPosition++;
 
             a_tradingObject.addShares(m_positionsPerTradeBuy);
             a_tradingObject.removeCapital(m_positionsPerTradeBuy * a_TickerPrice);
             a_tradingObject.addTransaction(m_positionsPerTradeBuy);
+            m_capInvested += m_positionsPerTradeBuy * a_TickerPrice;
 
+            //m_priceAtWhichWentLong = a_TickerPrice;
             actionPerformed = true;
         }
     }
@@ -291,11 +302,70 @@ void Simulator::handleTrading(double a_signal, double& a_TickerPrice, TradingObj
         negativeSignTrading(a_signal, a_TickerPrice, a_tradingObject);
     }
 
+    a_tradingObject.addDailyPNL(m_capInStock - m_yesterdayCapInStock);
+    m_yesterdayCapInStock = m_capInStock;
+
+    a_tradingObject.addCumulativePNL(m_availableCap - m_yesterdayAvailableCap);
+    m_yesterdayAvailableCap = m_availableCap;
+
+    a_tradingObject.addTotalMarketValue(m_sharesHeld * a_TickerPrice);
+    a_tradingObject.addNetMarketValue(m_capInvested / m_capReturned);
+    a_tradingObject.addImbalance(a_tradingObject.getNetMarketValue().back() / a_tradingObject.getTotalMarketValue().back());
+
 }
 
 
-void Simulator::dailyReport() {
+/*
+NAME
+    Simulator::dailyReport
 
+SYNOPSIS
+    void Simulator::dailyReport()
+
+DESCRIPTION
+    Outputs daily report for the simulator:
+
+    * total num of positions (in my case these are the shares owned)
+    * dollar PNL for current stock = value today - value yesterday
+    * cumulative dollar PNL = value today - value yesterday
+    * total market value = num shares * price
+    * net market value = how much currently win/lose
+    * Imbalance = Net/Total
+    * Sharpe ratio*
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+void Simulator::dailyReport() {
+    DateTime today = Utils::today();
+
+    m_dailyStatistics << "Transaction report for simulation ran at: " << today << "\n\n\n";
+
+    for (auto trObject = m_tradingContainer.begin(); trObject != m_tradingContainer.end(); ++trObject) {
+        m_dailyStatistics << "Daily Statistics for ticker    -> " << trObject->getName() << "\n";
+        m_dailyStatistics << "Date            Signal          Shares          PNL          Cum. PNL          Total Market Value          Net Market Value          Imbalance\n";
+
+        for (unsigned int i = 0; i < trObject->getDates().size(); ++i) {
+            m_dailyStatistics << std::right << trObject->getDates().at(i) <<
+                                 std::setw(10) << std::right << std::setprecision(5) << trObject->getSignals().at(i) <<
+                                 std::setw(17) << std::right << std::setprecision(5) << trObject->getDailyShares().at(i) <<
+                                 std::setw(14) << std::right << std::setprecision(5) << trObject->getDailyPNL().at(i) <<
+                                 std::setw(15) << std::right << std::setprecision(5) << trObject->getCumulativePNL().at(i) <<
+                                 std::setw(23) << std::right << std::setprecision(5) << trObject->getTotalMarketValue().at(i) <<
+                                 std::setw(27) << std::right << std::setprecision(5) << trObject->getNetMarketValue().at(i) <<
+                                 std::setw(24) << std::right << std::setprecision(5) << trObject->getImbalance().at(i) << "\n\n";
+        }
+    }
+
+    m_dailyStatistics << "\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+    m_dailyStatistics << "Configurations used for current simulation:\n";
+    m_dailyStatistics << *m_configs << "\n";
 }
 
 
@@ -321,7 +391,7 @@ DATE
 void Simulator::transactionReport() {
     DateTime today = Utils::today();
 
-    m_transactionStatistics << std::setw(25) << "Transaction report for simulation ran at: " << today << "\n\n\n";
+    m_transactionStatistics << "Transaction report for simulation ran at: " << today << "\n\n\n";
 
     for (auto trObject = m_tradingContainer.begin(); trObject != m_tradingContainer.end(); ++trObject) {
         m_transactionStatistics << "Statistics for ticker    -> " << trObject->getName() << "\n";

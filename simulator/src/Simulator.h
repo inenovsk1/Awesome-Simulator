@@ -53,13 +53,15 @@ protected:
     std::vector<TradingObject>       m_tradingContainer;
 
     double    m_availableCap;
+    double    m_capInvested;
+    double    m_capReturned;
     double    m_maxCapPerStock;
-    double    m_capInCurrentStock;
+    double    m_capInStock;
     double    m_entrySig;
     double    m_exitSig;
     int       m_exitDaysInPosition;
     int       m_currentDaysInPosition;
-    int       m_currentPositionsHeld;
+    int       m_sharesHeld;
     int       m_positionsPerTradeBuy;
     int       m_positionsPerTradeSell;
     int       m_maxPositionsPerInstrument;
@@ -69,6 +71,9 @@ protected:
     int       m_dailyReport;
     int       m_monthlyReport;
     int       m_transactionsReport;
+
+    double    m_yesterdayCapInStock;
+    double    m_yesterdayAvailableCap;
 
     std::ofstream m_out;
     std::ofstream m_transactionStatistics;

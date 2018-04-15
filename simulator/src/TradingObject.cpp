@@ -208,6 +208,256 @@ void TradingObject::addDate(DateTime a_date) {
 
 /*
 NAME
+    TradingObject::addDailyPNL
+
+SYNOPSIS
+    void TradingObject::addDailyPNL(double a_amount)
+
+    a_amount   -> Adds PNL for current day
+
+DESCRIPTION
+    Keeps history of daily PNL for the current trading object
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+void TradingObject::addDailyPNL(double a_amount) {
+    m_dailyPNL.push_back(a_amount);
+}
+
+
+/*
+NAME
+    TradingObject::addCumulativePNL
+
+SYNOPSIS
+    void TradingObject::addCumulativePNL(double a_amount)
+
+    a_amount   -> Adds cumulative PNL for current day
+
+DESCRIPTION
+    Keeps history of cumulative PNL on the whole available capital
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+void TradingObject::addCumulativePNL(double a_amount) {
+    m_cummulativePNL.push_back(a_amount);
+}
+
+
+/*
+NAME
+    TradingObject::addTotalMarketValue
+
+SYNOPSIS
+    void TradingObject::addTotalMarketValue(double a_amount)
+
+    a_amount   -> Adds total market value for each day owned by current trading object
+
+DESCRIPTION
+    Keeps history of total market value for the trading object for each day
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+void TradingObject::addTotalMarketValue(double a_amount) {
+    m_totalMarketValue.push_back(a_amount);
+}
+
+
+/*
+NAME
+    TradingObject::addNetMarketValue
+
+SYNOPSIS
+    void TradingObject::addNetMarketValue(double a_amount)
+
+    a_amount   -> Adds net market value for each day owned by current trading object
+
+DESCRIPTION
+    Keeps history of net market value for the trading object for each day
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+void TradingObject::addNetMarketValue(double a_amount) {
+    m_netMarketValue.push_back(a_amount);
+}
+
+
+/*
+NAME
+    TradingObject::addImbalance
+
+SYNOPSIS
+    void TradingObject::addImbalance(double a_amount)
+
+    a_amount   -> Adds imbalance for each day owned by current trading object
+
+DESCRIPTION
+    Keeps history of imbalance for the trading object for each day
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+void TradingObject::addImbalance(double a_amount) {
+    m_imbalance.push_back(a_amount);
+}
+
+
+/*
+NAME
+    TradingObject::getDailyPNL
+
+SYNOPSIS
+    std::vector<double> TradingObject::getDailyPNL()
+
+DESCRIPTION
+    Returns the history vector for the daily PNL for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+std::vector<double> TradingObject::getDailyPNL() {
+    return m_dailyPNL;
+}
+
+
+/*
+NAME
+    TradingObject::getCumulativePNL
+
+SYNOPSIS
+    std::vector<double> TradingObject::getCumulativePNL()
+
+DESCRIPTION
+    Returns the history vector for the cumulative PNL for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+std::vector<double> TradingObject::getCumulativePNL() {
+    return m_cummulativePNL;
+}
+
+
+/*
+NAME
+    TradingObject::getTotalMarketValue
+
+SYNOPSIS
+    std::vector<double> TradingObject::getTotalMarketValue()
+
+DESCRIPTION
+    Returns the history vector for the total market value for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+std::vector<double> TradingObject::getTotalMarketValue() {
+    return m_totalMarketValue;
+}
+
+
+/*
+NAME
+    TradingObject::getNetMarketValue
+
+SYNOPSIS
+    std::vector<double> TradingObject::getNetMarketValue()
+
+DESCRIPTION
+    Returns the history vector for the net market value for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+std::vector<double> TradingObject::getNetMarketValue() {
+    return m_netMarketValue;
+}
+
+
+/*
+NAME
+    TradingObject::getImbalance
+
+SYNOPSIS
+    std::vector<double> TradingObject::getImbalance()
+
+DESCRIPTION
+    Returns the history vector for the imbalance for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 14, 2018
+*/
+std::vector<double> TradingObject::getImbalance() {
+    return m_imbalance;
+}
+
+
+/*
+NAME
     TradingObject::getName
 
 SYNOPSIS
@@ -241,7 +491,7 @@ DESCRIPTION
     Returns history vector for all trading dates for current ticker
 
 RETURNS
-    Same as description!
+    Same as Description!
 
 AUTHOR
     Ivaylo Nenovski
@@ -265,7 +515,7 @@ DESCRIPTION
     Returns history vector for all signals for current ticker
 
 RETURNS
-    Same as description!
+    Same as Description!
 
 AUTHOR
     Ivaylo Nenovski
@@ -290,7 +540,7 @@ DESCRIPTION
     current ticker
 
 RETURNS
-    Same as description!
+    Same as Description!
 
 AUTHOR
     Ivaylo Nenovski
@@ -315,7 +565,7 @@ DESCRIPTION
     current ticker
 
 RETURNS
-    Same as description!
+    Same as Description!
 
 AUTHOR
     Ivaylo Nenovski
@@ -340,7 +590,7 @@ DESCRIPTION
     current ticker
 
 RETURNS
-    Same as description!
+    Same as Description!
 
 AUTHOR
     Ivaylo Nenovski
