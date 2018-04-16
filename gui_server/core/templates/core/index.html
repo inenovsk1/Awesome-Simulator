@@ -16,64 +16,64 @@
     <div class="container-fluid">
         <div class="jumbotron">
             <h1 class="display-1">Awesome Simulator!</h1>
-                <form action="/simulating" method="post">
-                    <div class="form-check">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col">
-                                <label for="entryCondition">Entry Signal</label>
-                                {{ form.entryCondition }}
-                            </div>
-                            <div class="col">
-                                <label for="exitCondition">Exit Signal</label>
-                                {{ form.exitCondition }}
-                            </div>
+            <form action="/simulating" method="post">
+                <div class="form-check">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <label for="entryCondition">Entry Signal</label>
+                            {{ form.entryCondition }}
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="daysInPosition">Days In Position</label>
-                                {{ form.daysInPosition }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="availableCapital">Available Capital</label>
-                                {{ form.availableCapital }}
-                            </div>
-                            <div class="col">
-                                <label for="maxCapPerStock">Max Capital Per Stock</label>
-                                {{ form.maxCapPerStock }}
-                            </div>
-                            <div class="col">
-                                <label for="maxPositionsPerInstrument">Max Positions Per Instrument</label>
-                                {{ form.maxPositionsPerInstrument }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="positionsPerTradeBuy">Positions Per Trade Buy</label>
-                                {{ form.positionsPerTradeBuy }}
-                            </div>
-                            <div class="col">
-                                <label for="positionsPerTradeSell">Positions Per Trade Sell</label>
-                                {{ form.positionsPerTradeSell }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="dailyReport">Daily Report</label>
-                                {{ form.dailyReport }}
-                            </div>
-                            <div class="col">
-                                <label for="transactionReport">Transaction Report</label>
-                                {{ form.transactionReport }}
-                            </div>
+                        <div class="col">
+                            <label for="exitCondition">Exit Signal</label>
+                            {{ form.exitCondition }}
                         </div>
                     </div>
-                    <br>
-                    <br>
-                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Simulate">
-                </form>
+                    <div class="row">
+                        <div class="col">
+                            <label for="daysInPosition">Days In Position</label>
+                            {{ form.daysInPosition }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="availableCapital">Available Capital</label>
+                            {{ form.availableCapital }}
+                        </div>
+                        <div class="col">
+                            <label for="maxCapPerStock">Max Capital Per Stock</label>
+                            {{ form.maxCapPerStock }}
+                        </div>
+                        <div class="col">
+                            <label for="maxPositionsPerInstrument">Max Positions Per Instrument</label>
+                            {{ form.maxPositionsPerInstrument }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="positionsPerTradeBuy">Positions Per Trade Buy</label>
+                            {{ form.positionsPerTradeBuy }}
+                        </div>
+                        <div class="col">
+                            <label for="positionsPerTradeSell">Positions Per Trade Sell</label>
+                            {{ form.positionsPerTradeSell }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="dailyReport">Daily Report</label>
+                            {{ form.dailyReport }}
+                        </div>
+                        <div class="col">
+                            <label for="transactionReport">Transaction Report</label>
+                            {{ form.transactionReport }}
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <input class="btn btn-primary btn-lg btn-block" type="submit" value="Simulate">
+            </form>
         </div>
     </div>
 </body>

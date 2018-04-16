@@ -29,13 +29,21 @@ def loader(request):
                 'transactionReport': request.POST['transactionReport']
             }
 
-            render(request, 'core/loader.html')
-
             createConfigFile(formData)
 
-            #return redirect('core/loader.html')
-            return render(request, 'core/loader.html')
-            #return render(request, 'core/success.html')
+            return render(request, 'core/simulation.html')
+    
+    # This else is simply for debugging purposes
+    elif request.method == 'GET':
+        return render(request, 'core/simulation.html')
 
-def success(request):
-    return render(request, 'core/success.html')
+def simulationProgress(request):
+    if request.method == 'POST':
+
+        passedData = request.POST['data']
+
+        if passedData == 'Simulation started':
+            runProcess()
+
+            # Actally not rendering, however, each view should return some HTTP object back!!
+            return render(request, 'core/simulation.html')

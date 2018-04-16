@@ -1,7 +1,8 @@
 .loader {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 16px solid #3498db;
+    /*border-top: 16px solid #3498db; #4d79ff #cc7a00*/
+    border-top: 16px solid #e67300;
     width: 200px;
     height: 200px;
     -webkit-animation: spin 2s linear infinite;
