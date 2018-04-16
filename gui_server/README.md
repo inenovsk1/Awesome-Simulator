@@ -19,7 +19,7 @@ Once the moduel is there one can run this command to generate a key
 ```
 python3 manage.py generate_secret_key
 ```
-or this use to --replace flag to replace the key in the same file
+or this use the --replace flag to replace the key in the same file
 ```
 python3 manage.py generate_secret_key --replace
 ```
