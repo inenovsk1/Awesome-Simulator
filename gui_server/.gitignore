@@ -1,3 +1,4 @@
 .vscode
 *pycache*
 secretkey.txt
+webConfigurations.ini
