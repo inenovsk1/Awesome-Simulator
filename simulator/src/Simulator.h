@@ -24,7 +24,6 @@
 #include "DateTime.h"
 #include "TickerData.h"
 #include "TradingObject.h"
-#include "MessageLog.h"
 #include "Utilities.h"
 
 
@@ -49,7 +48,6 @@ protected:
     Database*                        m_db;
     std::unique_ptr<ConfigParser>    m_parser;
     std::unique_ptr<Configurations>  m_configs;
-    std::unique_ptr<MessageLog>      m_msgLog;
     std::vector<TradingObject>       m_tradingContainer;
 
     double    m_availableCap;

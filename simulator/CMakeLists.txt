@@ -3,8 +3,8 @@ project(simulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 add_executable(simulator
         src/ConfigParser.cpp
@@ -22,8 +22,6 @@ add_executable(simulator
         src/Utilities.cpp
         src/Simulator.cpp
         src/Simulator.h
-        src/MessageLog.cpp
-        src/MessageLog.h
         src/TradingObject.cpp
         src/TradingObject.h
         src/ModelA.cpp

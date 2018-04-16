@@ -44,7 +44,6 @@ void Simulator::prepareModel() {
     m_parser->parseConfigurations();
 
     m_configs = std::make_unique<Configurations>(m_parser->getConfigs());
-    m_msgLog  = std::make_unique<MessageLog>();
 
     m_db = &(Database::getDatabaseInstance(m_configs->accessParameter("universe", "data_directory"),
                                            m_configs->accessParameter("universe", "universe_file")));

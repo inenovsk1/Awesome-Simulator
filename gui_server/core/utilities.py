@@ -36,4 +36,9 @@ def runProcess():
     If one wants to run the simulator, and is not logged in as myself, then one should
     change to path to use an absolute path!!
     """
-    subprocess.call('~/Storage/home/programming/Final-Project/Awesome-Simulator/simulator/cmake-build-debug/simulator webConfigurations.ini', shell=True)
+    # use this when debugging and still changing source code on simulator
+    #subprocess.call('~/Storage/home/programming/Final-Project/Awesome-Simulator/simulator/cmake-build-debug/simulator webConfigurations.ini', shell=True)
+    
+    # Once simulator is complete, move a copy of the executable in the root directory of the server
+    # and use it instead for simpler and shorter command
+    subprocess.call('./simulator webConfigurations.ini', shell=True)
