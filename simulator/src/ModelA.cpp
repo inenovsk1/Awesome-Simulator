@@ -1,7 +1,3 @@
-//
-// Created by inenovski on 2/27/18.
-//
-
 #include "ModelA.h"
 
 
@@ -229,7 +225,7 @@ void ModelA::runSimulation() {
         m_out << "# Invertions occurred: " << m_signalInvertionsPerInstrument << "\n";
     }
 
-    std::cout << "Total earnings -> " << (m_availableCap - initialCap) << std::endl;
+    std::cout << "\nTotal earnings -> " << (m_availableCap - initialCap) << std::endl;
     m_out << "\nTotal earnings -> " << (m_availableCap - initialCap) << "\n";
 
     // record statistics for the simulation

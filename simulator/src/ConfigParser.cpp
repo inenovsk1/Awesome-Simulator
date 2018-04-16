@@ -172,7 +172,25 @@ ConfigParser::MatchResult ConfigParser::identifyLine(std::string a_line) {
 }
 
 
+/*
+NAME
+    ConfigParser::getConfigs
+
+SYNOPSIS
+    std::map<std::string, std::unordered_map<std::string, std::string>> ConfigParser::getConfigs()
+
+DESCRIPTION
+    Returns a copy of the internal data structure that holds all parsed configurations!
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    November 15, 2017
+*/
 std::map<std::string, std::unordered_map<std::string, std::string>> ConfigParser::getConfigs() {
 	return m_configurations;
 }
-

@@ -83,12 +83,3 @@ private:
 	static const int ADJ_OPEN_DATA_INDICATOR = 6;
     static const int UNAVAILABLE_DATA = -999;
 };
-
-/*
-given date, what index it is?? - still need to implement
-*/
-
-/*
- * use IBM as a reference ticker to reserve initial space for vectors
- * */
-

@@ -1,12 +1,11 @@
-//
-// Created by inenovski on 2/18/18.
-//
-
 #include "Simulator.h"
 
 
 Simulator::Simulator(int argc, char** argv) : m_argc(argc), m_argv(argv) {
     m_out.open("TradingSummary.txt");
+    std::string today = Utils::today();
+    m_out << "Trading summary report for simulation ran at: " << today << "\n\n\n";
+
     m_transactionStatistics.open("TransactionReport.txt");
     m_dailyStatistics.open("DailyReport.txt");
     m_positiveSign = true;
@@ -342,7 +341,7 @@ DATE
     April 14, 2018
 */
 void Simulator::dailyReport() {
-    DateTime today = Utils::today();
+    std::string today = Utils::today();
 
     m_dailyStatistics << "Transaction report for simulation ran at: " << today << "\n\n\n";
 
@@ -388,7 +387,7 @@ DATE
     April 2, 2018
 */
 void Simulator::transactionReport() {
-    DateTime today = Utils::today();
+    std::string today = Utils::today();
 
     m_transactionStatistics << "Transaction report for simulation ran at: " << today << "\n\n\n";
 
@@ -436,10 +435,12 @@ void Simulator::recordStatistics() {
     m_out << *m_configs << "\n";
 
     if(m_dailyReport == 1) {
+        std::cout << "\nWriting Daily Report..\n";
         dailyReport();
     }
 
     if (m_transactionsReport == 1) {
+        std::cout << "Writing Transaction Report..\n";
         transactionReport();
     }
 }

@@ -1,7 +1,3 @@
-//
-// Created by inenovski on 2/18/18.
-//
-
 /*
  * ~~~~~~~~~~~~~~~~~~~~ Simulator class ~~~~~~~~~~~~~~~~~~~~
  *

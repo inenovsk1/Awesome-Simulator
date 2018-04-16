@@ -184,6 +184,25 @@ void Utils::determineCommandLineOptions(int argc, char** argv) {
 }
 
 
+/*
+NAME
+    Utils::today
+
+SYNOPSIS
+    std::string Utils::today()
+
+DESCRIPTION
+    Returns today date in a string format in YYYY-MM-DD format
+
+RETURNS
+    String representing today's date
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    March 28, 2018
+*/
 std::string Utils::today() {
     time_t     now = time(0);
     tm         tstruct;
