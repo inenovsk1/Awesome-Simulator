@@ -349,15 +349,23 @@ void Simulator::dailyReport() {
         m_dailyStatistics << "Daily Statistics for ticker    -> " << trObject->getName() << "\n";
         m_dailyStatistics << "Date            Signal          Shares          PNL          Cum. PNL          Total Market Value          Net Market Value          Imbalance\n";
 
+        std::vector<double> signals          = trObject->getSignals();
+        std::vector<double> dailyPNL         = trObject->getDailyPNL();
+        std::vector<double> cumulativePNL    = trObject->getCumulativePNL();
+        std::vector<double> totalMarketValue = trObject->getTotalMarketValue();
+        std::vector<double> netMarketValue   = trObject->getNetMarketValue();
+        std::vector<double> imbalance        = trObject->getImbalance();
+        std::vector<int>    dailyShares      = trObject->getDailyShares();
+
         for (unsigned int i = 0; i < trObject->getDates().size(); ++i) {
             m_dailyStatistics << std::right << trObject->getDates().at(i) <<
-                                 std::setw(10) << std::right << std::setprecision(5) << trObject->getSignals().at(i) <<
-                                 std::setw(17) << std::right << std::setprecision(5) << trObject->getDailyShares().at(i) <<
-                                 std::setw(14) << std::right << std::setprecision(5) << trObject->getDailyPNL().at(i) <<
-                                 std::setw(15) << std::right << std::setprecision(5) << trObject->getCumulativePNL().at(i) <<
-                                 std::setw(23) << std::right << std::setprecision(5) << trObject->getTotalMarketValue().at(i) <<
-                                 std::setw(27) << std::right << std::setprecision(5) << trObject->getNetMarketValue().at(i) <<
-                                 std::setw(24) << std::right << std::setprecision(5) << trObject->getImbalance().at(i) << "\n\n";
+                                 std::setw(10) << std::right << std::setprecision(5) << signals.at(i) <<
+                                 std::setw(17) << std::right << std::setprecision(5) << dailyShares.at(i) <<
+                                 std::setw(14) << std::right << std::setprecision(5) << dailyPNL.at(i) <<
+                                 std::setw(15) << std::right << std::setprecision(5) << cumulativePNL.at(i) <<
+                                 std::setw(23) << std::right << std::setprecision(5) << totalMarketValue.at(i) <<
+                                 std::setw(27) << std::right << std::setprecision(5) << netMarketValue.at(i) <<
+                                 std::setw(24) << std::right << std::setprecision(5) << imbalance.at(i) << "\n\n";
         }
     }
 
@@ -395,12 +403,17 @@ void Simulator::transactionReport() {
         m_transactionStatistics << "Statistics for ticker    -> " << trObject->getName() << "\n";
         m_transactionStatistics << "Date             Signal             Shares             Transactions             Capital In Object\n";
 
+        std::vector<double> signals           = trObject->getSignals();
+        std::vector<double> dailyCap          = trObject->getDailyCapital();
+        std::vector<int>    dailyShares       = trObject->getDailyShares();
+        std::vector<int>    dailyTransactions = trObject->getDailyTransactions();
+
         for (unsigned int i = 0; i < trObject->getDates().size(); ++i) {
             m_transactionStatistics << std::setw(2) << std::right << trObject->getDates().at(i) <<
-                              std::setw(13) << std::right << std::setprecision(5) << trObject->getSignals().at(i) <<
-                              std::setw(17) << std::right << std::setprecision(5) << trObject->getDailyShares().at(i) <<
-                              std::setw(24) << std::right << std::setprecision(5) << trObject->getDailyTransactions().at(i) <<
-                              std::setw(25) << std::right << std::setprecision(5) << trObject->getDailyCapital().at(i) << "\n\n";
+                              std::setw(13) << std::right << std::setprecision(5) << signals.at(i) <<
+                              std::setw(17) << std::right << std::setprecision(5) << dailyShares.at(i) <<
+                              std::setw(24) << std::right << std::setprecision(5) << dailyTransactions.at(i) <<
+                              std::setw(25) << std::right << std::setprecision(5) << dailyCap.at(i) << "\n\n";
         }
     }
 
