@@ -233,7 +233,7 @@ NAME
     TradingObject::addCumulativePNL
 
 SYNOPSIS
-    void TradingObject::addCumulativePNL(double a_amount)
+    void TradingObject::updateCumulativePNL(double a_amount)
 
     a_amount   -> Adds cumulative PNL for current day
 
@@ -249,8 +249,13 @@ AUTHOR
 DATE
     April 14, 2018
 */
-void TradingObject::addCumulativePNL(double a_amount) {
-    m_cummulativePNL.push_back(a_amount);
+void TradingObject::updateCumulativePNL(double a_amount) {
+    if(m_cumulativePNL.size() == 0) {
+        m_cumulativePNL.push_back(a_amount);
+    }
+    else {
+        m_cumulativePNL.push_back(m_cumulativePNL.back() + a_amount);
+    }
 }
 
 
@@ -259,7 +264,7 @@ NAME
     TradingObject::addTotalMarketValue
 
 SYNOPSIS
-    void TradingObject::addTotalMarketValue(double a_amount)
+    void TradingObject::addStockTotalMarketValue(double a_amount)
 
     a_amount   -> Adds total market value for each day owned by current trading object
 
@@ -275,8 +280,8 @@ AUTHOR
 DATE
     April 14, 2018
 */
-void TradingObject::addTotalMarketValue(double a_amount) {
-    m_totalMarketValue.push_back(a_amount);
+void TradingObject::addStockTotalMarketValue(double a_amount) {
+    m_stockTotalMarketValue.push_back(a_amount);
 }
 
 
@@ -285,7 +290,7 @@ NAME
     TradingObject::addNetMarketValue
 
 SYNOPSIS
-    void TradingObject::addNetMarketValue(double a_amount)
+    void TradingObject::addStockNetMarketValue(double a_amount)
 
     a_amount   -> Adds net market value for each day owned by current trading object
 
@@ -301,8 +306,8 @@ AUTHOR
 DATE
     April 14, 2018
 */
-void TradingObject::addNetMarketValue(double a_amount) {
-    m_netMarketValue.push_back(a_amount);
+void TradingObject::addStockNetMarketValue(double a_amount) {
+    m_stockNetMarketValue.push_back(a_amount);
 }
 
 
@@ -311,7 +316,7 @@ NAME
     TradingObject::addImbalance
 
 SYNOPSIS
-    void TradingObject::addImbalance(double a_amount)
+    void TradingObject::addStockImbalance(double a_amount)
 
     a_amount   -> Adds imbalance for each day owned by current trading object
 
@@ -327,8 +332,8 @@ AUTHOR
 DATE
     April 14, 2018
 */
-void TradingObject::addImbalance(double a_amount) {
-    m_imbalance.push_back(a_amount);
+void TradingObject::addStockImbalance(double a_amount) {
+    m_stockImbalance.push_back(a_amount);
 }
 
 
@@ -376,7 +381,7 @@ DATE
     April 14, 2018
 */
 std::vector<double> TradingObject::getCumulativePNL() {
-    return m_cummulativePNL;
+    return m_cumulativePNL;
 }
 
 
@@ -385,7 +390,7 @@ NAME
     TradingObject::getTotalMarketValue
 
 SYNOPSIS
-    std::vector<double> TradingObject::getTotalMarketValue()
+    std::vector<double> TradingObject::getStockTotalMarketValue()
 
 DESCRIPTION
     Returns the history vector for the total market value for the trading object
@@ -399,8 +404,8 @@ AUTHOR
 DATE
     April 14, 2018
 */
-std::vector<double> TradingObject::getTotalMarketValue() {
-    return m_totalMarketValue;
+std::vector<double> TradingObject::getStockTotalMarketValue() {
+    return m_stockTotalMarketValue;
 }
 
 
@@ -409,7 +414,7 @@ NAME
     TradingObject::getNetMarketValue
 
 SYNOPSIS
-    std::vector<double> TradingObject::getNetMarketValue()
+    std::vector<double> TradingObject::getStockNetMarketValue()
 
 DESCRIPTION
     Returns the history vector for the net market value for the trading object
@@ -423,8 +428,8 @@ AUTHOR
 DATE
     April 14, 2018
 */
-std::vector<double> TradingObject::getNetMarketValue() {
-    return m_netMarketValue;
+std::vector<double> TradingObject::getStockNetMarketValue() {
+    return m_stockNetMarketValue;
 }
 
 
@@ -433,7 +438,7 @@ NAME
     TradingObject::getImbalance
 
 SYNOPSIS
-    std::vector<double> TradingObject::getImbalance()
+    std::vector<double> TradingObject::getStockImbalance()
 
 DESCRIPTION
     Returns the history vector for the imbalance for the trading object
@@ -447,8 +452,8 @@ AUTHOR
 DATE
     April 14, 2018
 */
-std::vector<double> TradingObject::getImbalance() {
-    return m_imbalance;
+std::vector<double> TradingObject::getStockImbalance() {
+    return m_stockImbalance;
 }
 
 

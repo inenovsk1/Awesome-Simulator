@@ -29,10 +29,10 @@ public:
     void addSignal(double a_signal);
     void addDate(DateTime a_date);
     void addDailyPNL(double a_amount);
-    void addCumulativePNL(double a_amount);
-    void addTotalMarketValue(double a_amount);
-    void addNetMarketValue(double a_amount);
-    void addImbalance(double a_amount);
+    void updateCumulativePNL(double a_amount);
+    void addStockTotalMarketValue(double a_amount);
+    void addStockNetMarketValue(double a_amount);
+    void addStockImbalance(double a_amount);
 
     std::string getName();
     std::vector<DateTime> getDates();
@@ -40,9 +40,9 @@ public:
     std::vector<double> getDailyCapital();
     std::vector<double> getDailyPNL();
     std::vector<double> getCumulativePNL();
-    std::vector<double> getTotalMarketValue();
-    std::vector<double> getNetMarketValue();
-    std::vector<double> getImbalance();
+    std::vector<double> getStockTotalMarketValue();
+    std::vector<double> getStockNetMarketValue();
+    std::vector<double> getStockImbalance();
     std::vector<int> getDailyTransactions();
     std::vector<int> getDailyShares();
 
@@ -55,11 +55,11 @@ private:
     std::vector<DateTime>  m_tradingDates;
     std::vector<double>    m_signals;
     std::vector<double>    m_dailyPNL;
-    std::vector<double>    m_cummulativePNL;
+    std::vector<double>    m_cumulativePNL;  // this is ticker based cumulative PNL, there's also TOTAl PNL in class simulator
     std::vector<double>    m_dailyCapital;
-    std::vector<double>    m_totalMarketValue;
-    std::vector<double>    m_netMarketValue;
-    std::vector<double>    m_imbalance;
+    std::vector<double>    m_stockTotalMarketValue;
+    std::vector<double>    m_stockNetMarketValue;
+    std::vector<double>    m_stockImbalance;
     std::vector<int>       m_dailyTransactions;
     std::vector<int>       m_dailyShares;
 };

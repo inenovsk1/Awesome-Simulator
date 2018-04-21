@@ -11,9 +11,8 @@ Simulator::Simulator(int argc, char** argv) : m_argc(argc), m_argv(argv) {
     m_positiveSign = true;
 
     m_yesterdayCapInStock = 0;
-    m_yesterdayAvailableCap = m_availableCap;
-    m_capInvested = 0;
-    m_capReturned = 0;
+    m_totalCapInvested = 0;
+    m_totalCapReturned = 0;
 }
 
 
@@ -137,8 +136,8 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
     }
 
     if(a_signal >= m_entrySig) {
-        int  numInstrumentsSell = m_sharesHeld > m_positionsPerTradeSell ?
-                                  m_positionsPerTradeSell : m_sharesHeld;
+        int  numInstrumentsSell = m_totalSharesHeld > m_positionsPerTradeSell ?
+                                  m_positionsPerTradeSell : m_totalSharesHeld;
 
         bool daysInPositionOver = m_currentDaysInPosition > m_exitDaysInPosition;
 
@@ -150,15 +149,17 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
             return;
         }
 
-        m_sharesHeld -= numInstrumentsSell;
+        m_totalSharesHeld -= numInstrumentsSell;
+        m_stockSharesHeld -= numInstrumentsSell;
         m_availableCap += numInstrumentsSell * a_TickerPrice;
         m_capInStock -= numInstrumentsSell * a_TickerPrice;
+        m_stockCapReturned += numInstrumentsSell * a_TickerPrice;
         m_currentDaysInPosition++;
 
         a_tradingObject.removeShares(numInstrumentsSell);
         a_tradingObject.addCapital(numInstrumentsSell * a_TickerPrice);
         a_tradingObject.addTransaction(numInstrumentsSell);
-        m_capReturned += numInstrumentsSell * a_TickerPrice;
+        m_totalCapReturned += numInstrumentsSell * a_TickerPrice;
 
         // daily risk of return
         //a_tradingObject.addDailyRateOfReturn((a_TickerPrice - m_priceAtWhichWentLong) / m_priceAtWhichWentLong * 100);
@@ -223,7 +224,7 @@ void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice, Tra
         double CapInStockAfterBuy            = m_capInStock + m_positionsPerTradeBuy * a_TickerPrice;
         bool   daysInPositionOver            = m_currentDaysInPosition > m_exitDaysInPosition;
 
-        if(daysInPositionOver || m_sharesHeld > m_maxPositionsPerInstrument) {
+        if(daysInPositionOver || m_totalSharesHeld > m_maxPositionsPerInstrument) {
 
             a_tradingObject.addShares(0);
             a_tradingObject.removeCapital(0);
@@ -233,17 +234,18 @@ void Simulator::negativeSignTrading(double& a_signal, double& a_TickerPrice, Tra
         }
 
         if(potentialAvailableCapAfterBuy > 0 && CapInStockAfterBuy < m_maxCapPerStock) {
-            m_sharesHeld += m_positionsPerTradeBuy;
+            m_totalSharesHeld += m_positionsPerTradeBuy;
+            m_stockSharesHeld += m_positionsPerTradeBuy;
             m_availableCap -= m_positionsPerTradeBuy * a_TickerPrice;
             m_capInStock += m_positionsPerTradeBuy * a_TickerPrice;
+            m_stockCapInvested += m_positionsPerTradeBuy * a_TickerPrice;
             m_currentDaysInPosition++;
 
             a_tradingObject.addShares(m_positionsPerTradeBuy);
             a_tradingObject.removeCapital(m_positionsPerTradeBuy * a_TickerPrice);
             a_tradingObject.addTransaction(m_positionsPerTradeBuy);
-            m_capInvested += m_positionsPerTradeBuy * a_TickerPrice;
+            m_totalCapInvested += m_positionsPerTradeBuy * a_TickerPrice;
 
-            //m_priceAtWhichWentLong = a_TickerPrice;
             actionPerformed = true;
         }
     }
@@ -288,6 +290,7 @@ DATE
     March 28, 2018
 */
 void Simulator::handleTrading(double a_signal, double& a_TickerPrice, TradingObject& a_tradingObject) {
+    m_yesterdayCapInStock = m_capInStock;
 
     if ((m_positiveSign && a_signal < 0) || (!m_positiveSign && a_signal > 0)) {
         invertSignals();
@@ -300,16 +303,14 @@ void Simulator::handleTrading(double a_signal, double& a_TickerPrice, TradingObj
         negativeSignTrading(a_signal, a_TickerPrice, a_tradingObject);
     }
 
-    a_tradingObject.addDailyPNL(m_capInStock - m_yesterdayCapInStock);
-    m_yesterdayCapInStock = m_capInStock;
+    double dailyPNL = m_capInStock - m_yesterdayCapInStock;
 
-    a_tradingObject.addCumulativePNL(m_availableCap - m_yesterdayAvailableCap);
-    m_yesterdayAvailableCap = m_availableCap;
+    a_tradingObject.addDailyPNL(dailyPNL);  // daily PNL for current stock
+    a_tradingObject.updateCumulativePNL(dailyPNL);  // cumulative PNL for current stock
 
-    a_tradingObject.addTotalMarketValue(m_sharesHeld * a_TickerPrice);
-    a_tradingObject.addNetMarketValue(m_capInvested / m_capReturned);
-    a_tradingObject.addImbalance(a_tradingObject.getNetMarketValue().back() / a_tradingObject.getTotalMarketValue().back());
-
+    a_tradingObject.addStockTotalMarketValue(m_stockSharesHeld * a_TickerPrice);
+    a_tradingObject.addStockNetMarketValue(m_stockCapInvested - m_stockCapReturned);
+    a_tradingObject.addStockImbalance(a_tradingObject.getStockNetMarketValue().back() / a_tradingObject.getStockTotalMarketValue().back());
 }
 
 
@@ -352,9 +353,9 @@ void Simulator::dailyReport() {
         std::vector<double> signals          = trObject->getSignals();
         std::vector<double> dailyPNL         = trObject->getDailyPNL();
         std::vector<double> cumulativePNL    = trObject->getCumulativePNL();
-        std::vector<double> totalMarketValue = trObject->getTotalMarketValue();
-        std::vector<double> netMarketValue   = trObject->getNetMarketValue();
-        std::vector<double> imbalance        = trObject->getImbalance();
+        std::vector<double> totalMarketValue = trObject->getStockTotalMarketValue();
+        std::vector<double> netMarketValue   = trObject->getStockNetMarketValue();
+        std::vector<double> imbalance        = trObject->getStockImbalance();
         std::vector<int>    dailyShares      = trObject->getDailyShares();
 
         for (unsigned int i = 0; i < trObject->getDates().size(); ++i) {

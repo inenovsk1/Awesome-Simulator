@@ -31,8 +31,6 @@ public:
     void prepareModel();
     void handleTrading(double a_signal, double& a_TickerPrice, TradingObject& a_tradingObject);
     void recordStatistics();
-    void run_all_configs();
-    void run_with_different_parameter_specified_on_command_line();
 
     virtual double calculateSignal(double a_currentAdjClose) = 0;
     virtual void   runSimulation() = 0;
@@ -47,15 +45,19 @@ protected:
     std::vector<TradingObject>       m_tradingContainer;
 
     double    m_availableCap;
-    double    m_capInvested;
-    double    m_capReturned;
+    double    m_totalCapInvested;
+    double    m_totalCapReturned;
+    double    m_stockCapInvested;
+    double    m_stockCapReturned;
     double    m_maxCapPerStock;
     double    m_capInStock;
     double    m_entrySig;
     double    m_exitSig;
+
     int       m_exitDaysInPosition;
     int       m_currentDaysInPosition;
-    int       m_sharesHeld;
+    int       m_totalSharesHeld;
+    int       m_stockSharesHeld;
     int       m_positionsPerTradeBuy;
     int       m_positionsPerTradeSell;
     int       m_maxPositionsPerInstrument;
@@ -67,7 +69,6 @@ protected:
     int       m_transactionsReport;
 
     double    m_yesterdayCapInStock;
-    double    m_yesterdayAvailableCap;
 
     std::ofstream m_out;
     std::ofstream m_transactionStatistics;

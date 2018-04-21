@@ -113,16 +113,19 @@ void ModelA::runSimulation() {
     prepareModel();
 
     double initialCap = m_availableCap;
+    m_totalCapInvested = 0;
+    m_totalCapReturned = 0;
+    m_totalSharesHeld = 0;
 
     // iterate over all tickers in the database
     for(auto tickerName = m_db->begin(); tickerName != m_db->end(); ++tickerName) {
         //setup initial variables for each ticker
         m_currentDaysInPosition = 0;
         m_capInStock = 0;
-        m_sharesHeld = 0;
         m_signalInvertionsPerInstrument = 0;
-        m_capInvested = 0;
-        m_capReturned = 0;
+        m_stockCapInvested = 0;
+        m_stockCapReturned = 0;
+        m_stockSharesHeld = 0;
 
         std::cout << "Currently trading ticker -> " << *tickerName << "\n";
 
@@ -157,10 +160,10 @@ void ModelA::runSimulation() {
                 currentTradingObject.addCapital(0);
                 currentTradingObject.addTransaction(0);
                 currentTradingObject.addDailyPNL(0);
-                currentTradingObject.addCumulativePNL(0);
-                currentTradingObject.addTotalMarketValue(0);
-                currentTradingObject.addNetMarketValue(0);
-                currentTradingObject.addImbalance(0);
+                currentTradingObject.updateCumulativePNL(0);
+                currentTradingObject.addStockTotalMarketValue(0);
+                currentTradingObject.addStockNetMarketValue(0);
+                currentTradingObject.addStockImbalance(0);
                 twentyDays++;
                 continue;
             }
@@ -185,10 +188,10 @@ void ModelA::runSimulation() {
                 currentTradingObject.addCapital(0);
                 currentTradingObject.addTransaction(0);
                 currentTradingObject.addDailyPNL(0);
-                currentTradingObject.addCumulativePNL(0);
-                currentTradingObject.addTotalMarketValue(0);
-                currentTradingObject.addNetMarketValue(0);
-                currentTradingObject.addImbalance(0);
+                currentTradingObject.updateCumulativePNL(0);
+                currentTradingObject.addStockTotalMarketValue(0);
+                currentTradingObject.addStockNetMarketValue(0);
+                currentTradingObject.addStockImbalance(0);
                 continue;
             }
 
