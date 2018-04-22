@@ -70,6 +70,8 @@ protected:
 
     double    m_yesterdayCapInStock;
 
+    std::vector<double> m_dailyReturns;
+
     std::ofstream m_out;
     std::ofstream m_transactionStatistics;
     std::ofstream m_dailyStatistics;

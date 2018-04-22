@@ -164,6 +164,7 @@ void ModelA::runSimulation() {
                 currentTradingObject.addStockTotalMarketValue(0);
                 currentTradingObject.addStockNetMarketValue(0);
                 currentTradingObject.addStockImbalance(0);
+                currentTradingObject.addSharpeRatio();
                 twentyDays++;
                 continue;
             }
@@ -192,6 +193,7 @@ void ModelA::runSimulation() {
                 currentTradingObject.addStockTotalMarketValue(0);
                 currentTradingObject.addStockNetMarketValue(0);
                 currentTradingObject.addStockImbalance(0);
+                currentTradingObject.addSharpeRatio();
                 continue;
             }
 

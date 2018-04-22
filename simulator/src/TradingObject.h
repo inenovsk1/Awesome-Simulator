@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "DateTime.h"
+#include "Utilities.h"
 
 
 class TradingObject {
@@ -33,6 +34,8 @@ public:
     void addStockTotalMarketValue(double a_amount);
     void addStockNetMarketValue(double a_amount);
     void addStockImbalance(double a_amount);
+    void addDailyReturn(double a_amount);
+    void addSharpeRatio();
 
     std::string getName();
     std::vector<DateTime> getDates();
@@ -43,6 +46,8 @@ public:
     std::vector<double> getStockTotalMarketValue();
     std::vector<double> getStockNetMarketValue();
     std::vector<double> getStockImbalance();
+    std::vector<double> getDailyReturns();
+    std::vector<double> getSharpeRatio();
     std::vector<int> getDailyTransactions();
     std::vector<int> getDailyShares();
 
@@ -60,6 +65,8 @@ private:
     std::vector<double>    m_stockTotalMarketValue;
     std::vector<double>    m_stockNetMarketValue;
     std::vector<double>    m_stockImbalance;
+    std::vector<double>    m_dailyReturns;
+    std::vector<double>    m_sharpeRatio;
     std::vector<int>       m_dailyTransactions;
     std::vector<int>       m_dailyShares;
 };

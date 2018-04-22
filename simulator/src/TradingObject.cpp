@@ -339,6 +339,57 @@ void TradingObject::addStockImbalance(double a_amount) {
 
 /*
 NAME
+    TradingObject::addDailyReturn
+
+SYNOPSIS
+    void TradingObject::addDailyReturn(double a_amount)
+
+DESCRIPTION
+    Keeps history of daily returns for the trading object for each day
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 21, 2018
+*/
+void TradingObject::addDailyReturn(double a_amount) {
+    m_dailyReturns.push_back(a_amount);
+}
+
+
+/*
+NAME
+    TradingObject::addSharpeRatio
+
+SYNOPSIS
+    void TradingObject::addSharpeRatio()
+
+DESCRIPTION
+    Keeps history of daily sharpe ratio for the trading object for each day
+
+RETURNS
+    Nothing
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 21, 2018
+*/
+void TradingObject::addSharpeRatio() {
+    double averageOfReturns      = Utils::average(m_dailyReturns);
+    double stDeviationOfReturns  = Utils::standardDeviation(m_dailyReturns);
+
+    m_sharpeRatio.push_back(averageOfReturns / stDeviationOfReturns);
+}
+
+
+/*
+NAME
     TradingObject::getDailyPNL
 
 SYNOPSIS
@@ -454,6 +505,54 @@ DATE
 */
 std::vector<double> TradingObject::getStockImbalance() {
     return m_stockImbalance;
+}
+
+
+/*
+NAME
+    TradingObject::getDailyReturns
+
+SYNOPSIS
+    std::vector<double> TradingObject::getDailyReturns()
+
+DESCRIPTION
+    Returns the history vector for the daily returns for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 21, 2018
+*/
+std::vector<double> TradingObject::getDailyReturns() {
+    return m_dailyReturns;
+}
+
+
+/*
+NAME
+    TradingObject::getSharpeRatio
+
+SYNOPSIS
+    std::vector<double> TradingObject::getSharpeRatio()
+
+DESCRIPTION
+    Returns the history vector for the daily sharpe ratios for the trading object
+
+RETURNS
+    Same as Description!
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 21, 2018
+*/
+std::vector<double> TradingObject::getSharpeRatio() {
+    return m_sharpeRatio;
 }
 
 

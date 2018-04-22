@@ -10,6 +10,8 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include <cmath>
 
 namespace Utils {
     std::string toLowerCase(std::string& a_word);
@@ -18,6 +20,8 @@ namespace Utils {
     void determineCommandLineOptions(int argc, char** argv);
     void showUsage();
     std::string today();
+    double standardDeviation(std::vector<double> a_numbers);
+    double average(std::vector<double> a_numbers);
 }
 
 #endif //SIMULATOR_UTILITIES_H

@@ -212,3 +212,87 @@ std::string Utils::today() {
 
     return buf;
 }
+
+
+/*
+NAME
+    Utils::standardDeviation
+
+SYNOPSIS
+    double Utils::standardDeviation(std::vector<double> a_numbers)
+
+DESCRIPTION
+    Finds the standard deviation of a list of numbers put in a vector of doubles
+
+RETURNS
+    The standard deviation of the numbers in the given vector
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 21, 2018
+*/
+double Utils::standardDeviation(std::vector<double> a_numbers) {
+
+    // step 1 -> get the average of the numbers
+    double sum = 0;
+
+    for (double num : a_numbers) {
+        sum += num;
+    }
+
+    double average = sum / a_numbers.size();
+
+    // step 2 -> for each number subtract the average and square the results
+    std::vector<double> newNumbers;
+
+    for (double num : a_numbers) {
+        double result = std::pow(num - average, 2);
+        newNumbers.push_back(result);
+    }
+
+    // step 3 -> get the average of the squared differences
+    sum = 0;
+
+    for (double num : newNumbers) {
+        sum += num;
+    }
+
+    average = sum / newNumbers.size();
+
+    // step 4 -> Take the square root of the average
+    double stDeviation = std::sqrt(average);
+
+    return stDeviation;
+}
+
+
+/*
+NAME
+    Utils::average
+
+SYNOPSIS
+    double Utils::average(std::vector<double> a_numbers)
+
+DESCRIPTION
+    Finds the average of a list of numbers put in a vector of doubles
+
+RETURNS
+    The average of the numbers in the given vector
+
+AUTHOR
+    Ivaylo Nenovski
+
+DATE
+    April 21, 2018
+*/
+double Utils::average(std::vector<double> a_numbers) {
+    double sum = 0;
+
+    for (double num : a_numbers) {
+        sum += num;
+    }
+
+    return sum / a_numbers.size();
+}

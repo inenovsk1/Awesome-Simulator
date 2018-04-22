@@ -131,6 +131,7 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
         a_tradingObject.removeShares(0);
         a_tradingObject.addCapital(0);
         a_tradingObject.addTransaction(0);
+        a_tradingObject.addDailyReturn(0);
 
         return;
     }
@@ -145,6 +146,7 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
             a_tradingObject.removeShares(0);
             a_tradingObject.addCapital(0);
             a_tradingObject.addTransaction(0);
+            a_tradingObject.addDailyReturn(0);
 
             return;
         }
@@ -159,10 +161,9 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
         a_tradingObject.removeShares(numInstrumentsSell);
         a_tradingObject.addCapital(numInstrumentsSell * a_TickerPrice);
         a_tradingObject.addTransaction(numInstrumentsSell);
+        a_tradingObject.addDailyReturn(m_stockCapReturned);
         m_totalCapReturned += numInstrumentsSell * a_TickerPrice;
 
-        // daily risk of return
-        //a_tradingObject.addDailyRateOfReturn((a_TickerPrice - m_priceAtWhichWentLong) / m_priceAtWhichWentLong * 100);
         actionPerformed = true;
     }
 
@@ -174,6 +175,7 @@ void Simulator::positiveSignTrading(double& a_signal, double& a_TickerPrice, Tra
         a_tradingObject.removeShares(0);
         a_tradingObject.addCapital(0);
         a_tradingObject.addTransaction(0);
+        a_tradingObject.addDailyReturn(0);
     }
 }
 
@@ -301,16 +303,22 @@ void Simulator::handleTrading(double a_signal, double& a_TickerPrice, TradingObj
     }
     else {
         negativeSignTrading(a_signal, a_TickerPrice, a_tradingObject);
+        a_tradingObject.addDailyReturn(0);
     }
 
-    double dailyPNL = m_capInStock - m_yesterdayCapInStock;
+    a_tradingObject.addSharpeRatio();
+
+    double dailyPNL = -(m_capInStock - m_yesterdayCapInStock);
 
     a_tradingObject.addDailyPNL(dailyPNL);  // daily PNL for current stock
     a_tradingObject.updateCumulativePNL(dailyPNL);  // cumulative PNL for current stock
 
-    a_tradingObject.addStockTotalMarketValue(m_stockSharesHeld * a_TickerPrice);
-    a_tradingObject.addStockNetMarketValue(m_stockCapInvested - m_stockCapReturned);
-    a_tradingObject.addStockImbalance(a_tradingObject.getStockNetMarketValue().back() / a_tradingObject.getStockTotalMarketValue().back());
+    double stockTotalMarketVal = m_stockSharesHeld * a_TickerPrice;
+    double stockNetMarketVal = m_stockCapInvested - m_stockCapReturned;
+
+    a_tradingObject.addStockTotalMarketValue(stockTotalMarketVal);
+    a_tradingObject.addStockNetMarketValue(stockNetMarketVal);
+    a_tradingObject.addStockImbalance(stockNetMarketVal / stockTotalMarketVal);
 }
 
 
@@ -348,15 +356,16 @@ void Simulator::dailyReport() {
 
     for (auto trObject = m_tradingContainer.begin(); trObject != m_tradingContainer.end(); ++trObject) {
         m_dailyStatistics << "Daily Statistics for ticker    -> " << trObject->getName() << "\n";
-        m_dailyStatistics << "Date            Signal          Shares          PNL          Cum. PNL          Total Market Value          Net Market Value          Imbalance\n";
+        m_dailyStatistics << "Date            Signal          Shares          PNL          Cum. PNL          Total Market Value          Net Market Value          Imbalance          Sharpe Ratio\n";
 
-        std::vector<double> signals          = trObject->getSignals();
-        std::vector<double> dailyPNL         = trObject->getDailyPNL();
-        std::vector<double> cumulativePNL    = trObject->getCumulativePNL();
-        std::vector<double> totalMarketValue = trObject->getStockTotalMarketValue();
-        std::vector<double> netMarketValue   = trObject->getStockNetMarketValue();
-        std::vector<double> imbalance        = trObject->getStockImbalance();
-        std::vector<int>    dailyShares      = trObject->getDailyShares();
+        std::vector<double> signals               = trObject->getSignals();
+        std::vector<double> dailyPNL              = trObject->getDailyPNL();
+        std::vector<double> cumulativePNL         = trObject->getCumulativePNL();
+        std::vector<double> stockTotalMarketValue = trObject->getStockTotalMarketValue();
+        std::vector<double> stockNetMarketValue   = trObject->getStockNetMarketValue();
+        std::vector<double> stockImbalance        = trObject->getStockImbalance();
+        std::vector<double> sharpeRatio           = trObject->getSharpeRatio();
+        std::vector<int>    dailyShares           = trObject->getDailyShares();
 
         for (unsigned int i = 0; i < trObject->getDates().size(); ++i) {
             m_dailyStatistics << std::right << trObject->getDates().at(i) <<
@@ -364,9 +373,10 @@ void Simulator::dailyReport() {
                                  std::setw(17) << std::right << std::setprecision(5) << dailyShares.at(i) <<
                                  std::setw(14) << std::right << std::setprecision(5) << dailyPNL.at(i) <<
                                  std::setw(15) << std::right << std::setprecision(5) << cumulativePNL.at(i) <<
-                                 std::setw(23) << std::right << std::setprecision(5) << totalMarketValue.at(i) <<
-                                 std::setw(27) << std::right << std::setprecision(5) << netMarketValue.at(i) <<
-                                 std::setw(24) << std::right << std::setprecision(5) << imbalance.at(i) << "\n\n";
+                                 std::setw(23) << std::right << std::setprecision(5) << stockTotalMarketValue.at(i) <<
+                                 std::setw(27) << std::right << std::setprecision(5) << stockNetMarketValue.at(i) <<
+                                 std::setw(24) << std::right << std::setprecision(5) << stockImbalance.at(i) <<
+                                 std::setw(20) << std::right << std::setprecision(5) << sharpeRatio.at(i) << "\n\n";
         }
     }
 
