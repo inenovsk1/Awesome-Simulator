@@ -306,7 +306,7 @@ void Simulator::handleTrading(double a_signal, double& a_TickerPrice, TradingObj
         a_tradingObject.addDailyReturn(0);
     }
 
-    a_tradingObject.addSharpeRatio();
+    //a_tradingObject.calculateDailySharpeRatio();
 
     double dailyPNL = -(m_capInStock - m_yesterdayCapInStock);
 

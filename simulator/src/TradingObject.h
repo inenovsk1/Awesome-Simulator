@@ -35,7 +35,7 @@ public:
     void addStockNetMarketValue(double a_amount);
     void addStockImbalance(double a_amount);
     void addDailyReturn(double a_amount);
-    void addSharpeRatio();
+    void calculateDailySharpeRatio();
 
     std::string getName();
     std::vector<DateTime> getDates();

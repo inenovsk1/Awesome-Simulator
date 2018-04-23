@@ -363,10 +363,10 @@ void TradingObject::addDailyReturn(double a_amount) {
 
 /*
 NAME
-    TradingObject::addSharpeRatio
+    TradingObject::calculateDailySharpeRatio
 
 SYNOPSIS
-    void TradingObject::addSharpeRatio()
+    void TradingObject::calculateDailySharpeRatio()
 
 DESCRIPTION
     Keeps history of daily sharpe ratio for the trading object for each day
@@ -380,11 +380,16 @@ AUTHOR
 DATE
     April 21, 2018
 */
-void TradingObject::addSharpeRatio() {
-    double averageOfReturns      = Utils::average(m_dailyReturns);
-    double stDeviationOfReturns  = Utils::standardDeviation(m_dailyReturns);
+void TradingObject::calculateDailySharpeRatio() {
+    for (int i = 0; i < m_dailyReturns.size(); ++i) {
+        // create a vector of the daily returns from the beginning up to day i
+        std::vector<double> partial(m_dailyReturns.begin(), m_dailyReturns.begin() + i);
 
-    m_sharpeRatio.push_back(averageOfReturns / stDeviationOfReturns);
+        double averageOfReturns      = Utils::average(partial);
+        double stDeviationOfReturns  = Utils::standardDeviation(partial);
+
+        m_sharpeRatio.push_back(averageOfReturns / stDeviationOfReturns);
+    }
 }
 
 

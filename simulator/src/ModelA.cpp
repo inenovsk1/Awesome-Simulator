@@ -164,7 +164,7 @@ void ModelA::runSimulation() {
                 currentTradingObject.addStockTotalMarketValue(0);
                 currentTradingObject.addStockNetMarketValue(0);
                 currentTradingObject.addStockImbalance(0);
-                currentTradingObject.addSharpeRatio();
+                currentTradingObject.addDailyReturn(0);
                 twentyDays++;
                 continue;
             }
@@ -193,7 +193,7 @@ void ModelA::runSimulation() {
                 currentTradingObject.addStockTotalMarketValue(0);
                 currentTradingObject.addStockNetMarketValue(0);
                 currentTradingObject.addStockImbalance(0);
-                currentTradingObject.addSharpeRatio();
+                currentTradingObject.addDailyReturn(0);
                 continue;
             }
 
@@ -214,6 +214,8 @@ void ModelA::runSimulation() {
             // determine whether to go long or short depending on the signal and buy/sell
             handleTrading(signal, tradingPrice, currentTradingObject);
         }
+
+        currentTradingObject.calculateDailySharpeRatio();
 
         m_tradingContainer.push_back(currentTradingObject);
 
